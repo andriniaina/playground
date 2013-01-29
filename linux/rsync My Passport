@@ -1,0 +1,28 @@
+function __echo_INFO() {
+	echo -e "${txtgrn}$1${txtrst}"
+}
+
+function __sync() {
+	local src=$1
+	local dest=$2
+
+	local txtred='\033[0;31m' # Red
+	local txtgrn='\033[0;32m' # Green
+	local txtrst='\033[0m'    # Text Reset
+
+	local OPTIONS='--exclude "Thumbs.db" --exclude "desktop.ini" '
+
+
+	__echo_INFO "${txtgrn}$1${txtrst}   <->   ${txtgrn}$2${txtrst}"
+	rsync -rtuv "$1/" "$2/" $OPTIONS
+	__echo_INFO "${txtgrn}$2${txtrst}   <->   ${txtgrn}$1${txtrst}"
+	rsync -rtuv "$2/" "$1/" $OPTIONS
+}
+
+PASSPORT='/media/My Passport'
+
+#
+# NE PAS OUBLIER LE SLASH A LA FIN DES REPERTOIRES !!!!
+#
+__sync "$PASSPORT/Mes images/" "$HOME/Pictures/Mes images/"
+__sync "$PASSPORT/Musique/"    "$HOME/Music/My Passport/"

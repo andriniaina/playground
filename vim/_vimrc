@@ -1,0 +1,381 @@
+" -----------------------------------------------------------------------------  
+" |                            VIM Settings                                   |
+" |                   (see gvimrc for gui vim settings)                       |
+" |                                                                           |
+" | Some highlights:                                                          |
+" |   jj = <esc>  Very useful for keeping your hands on the home row          |
+" |   ,n = toggle NERDTree off and on                                         |
+" |                                                                           |
+" |   ,f = fuzzy find all files                                               |
+" |   ,b = fuzzy find in all buffers                                          |
+" |                                                                           |
+" |   hh = inserts '=>'                                                       |
+" |   aa = inserts '@'                                                        |
+" |                                                                           |
+" |   ,h = new horizontal window                                              |
+" |   ,v = new vertical window                                                |
+" |                                                                           |
+" |   ,i = toggle invisibles                                                  |
+" |                                                                           |
+" |   enter and shift-enter = adds a new line after/before the current line   |
+" |                                                                           |
+" |   :call Tabstyle_tabs = set tab to real tabs                              |
+" |   :call Tabstyle_spaces = set tab to 2 spaces                             |
+" |                                                                           |
+" | Put machine/user specific settings in ~/.vimrc.local                      |
+" -----------------------------------------------------------------------------  
+
+
+set nocompatible
+let mapleader = ","
+set bufhidden=unload
+" set shellslash
+
+" Tabs ************************************************************************
+"set sta " a <Tab> in an indent inserts 'shiftwidth' spaces
+
+" view diffs between current buffer and version on disk
+command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | diffthis
+command -bar SqlComplete exe 'silent! DBCompleteProcedures' | exe 'silent! DBCompleteTables'
+set diffopt=filler,iwhite
+
+" Tidy XML file
+function! TidyXml()
+	silent! %!tidy --quiet yes --input-xml yes --indent yes --wrap 0 --wrap-attributes no
+	silent! %s/  /	/g
+endfunction
+" Tidy HTML5 file
+function! TidyHtml5()
+	silent! %!tidy5 --quiet yes --input-xml no --indent auto --wrap 0 --wrap-attributes no --new-pre-tags script --tab-size 2
+	silent! %s/  /	/g
+endfunction
+" Tidy HTML file
+function! TidyHtml()
+	silent! %!tidy --quiet yes --input-xml no --indent yes --wrap 0 --wrap-attributes no
+	silent! %s/  /	/g
+endfunction
+" Tidy SQL file
+function! TidySQL()
+	silent! %!SqlFormatter
+	silent! %s/  /	/g
+endfunction
+
+function! Tabstyle_tabs()
+  " Using 4 column tabs
+  set softtabstop=4
+  set shiftwidth=4
+  set tabstop=4
+  set noexpandtab
+endfunction
+
+function! Tabstyle_spaces()
+  " Use 2 spaces
+  set softtabstop=2
+  set shiftwidth=2
+  set tabstop=2
+  set expandtab
+endfunction
+
+function! Tabstyle_tabs_local()
+  " Using 4 column tabs
+  setlocal softtabstop=4
+  setlocal shiftwidth=4
+  setlocal tabstop=4
+  setlocal noexpandtab
+endfunction
+
+function! Tabstyle_spaces_local()
+  " Use 2 spaces
+  setlocal softtabstop=4
+  setlocal shiftwidth=4
+  setlocal tabstop=4
+  setlocal expandtab
+endfunction
+
+" default to tabs
+call Tabstyle_tabs()
+
+command Scratch enew | set buftype=nofile | set bufhidden=hide | setlocal noswapfile
+
+" Indenting *******************************************************************
+set ai " Automatically set the indent of a new line (local to buffer)
+set si " smartindent	(local to buffer)
+
+
+" Scrollbars ******************************************************************
+set sidescrolloff=2
+set numberwidth=4
+" set fdc=2
+
+" Windows *********************************************************************
+set equalalways " Multiple windows, when created, are equal in size
+set splitbelow splitright
+
+"Vertical split then hop to new buffer
+noremap <Leader>v :vsp +enew<cr>
+noremap <Leader>h :split +enew<cr>
+
+
+" Cursor highlights ***********************************************************
+set cursorline
+"set cursorcolumn
+
+
+" Searching *******************************************************************
+set hlsearch  " highlight search
+set incsearch  " incremental search, search as you type
+set ignorecase " Ignore case when searching 
+set smartcase " Ignore case when searching lowercase
+
+nnoremap <C-f> /
+nnoremap <C-h> :%s/
+vnoremap <C-h> :s/
+
+" Colors **********************************************************************
+"set t_Co=256 " 256 colors
+set background=dark 
+syntax on " syntax highlighting
+colorscheme bClear
+
+
+" Status Line *****************************************************************
+set showcmd
+set ruler " Show ruler
+set statusline=%F%M
+"set ch=2 " Make command line two lines high
+
+
+" Line Wrapping ***************************************************************
+set nowrap
+set linebreak  " Wrap at word
+
+" virtual edit : go beyond the new line character
+set virtualedit+=block
+
+
+" Mappings ********************************************************************
+" Professor VIM says '87% of users prefer jj over esc', jj abrams disagrees
+"imap jj <Esc>
+"imap uu _
+"imap hh =>
+"imap aa @
+
+
+" Directories *****************************************************************
+" Setup backup location and enable
+"set backupdir=~/backup/vim
+"set backup
+
+
+" Sets path to directory buffer was loaded from
+" autocmd BufEnter * lcd %:p:h
+" cd D:\SELL\53p100\SELL
+set autochdir
+"set clipboard=unnamed
+set fillchars+=diff:\ 
+
+" force utf-8 and compatible font(?)
+set encoding=utf-8
+
+" File Stuff ******************************************************************
+filetype plugin indent on
+" To show current filetype use: set filetype
+au BufRead,BufNewFile *.htc            set filetype=html
+au BufRead,BufNewFile *.cls,*.ctl      set filetype=vb
+au BufRead,BufNewFile *.log            set filetype=log
+au BufRead,BufNewFile *.xaml           set filetype=xml
+au BufRead,BufNewFile *.edi            set filetype=edifact
+au BufRead,BufNewFile *.vb             set filetype=vbnet
+au FileType vbnet                      set foldmethod=syntax
+au BufRead,BufNewFile *.fsx,*.fs       set filetype=fs
+au FileType fs                         call Tabstyle_spaces_local()
+au FileType python                     call Tabstyle_spaces_local()
+
+
+"autocmd FileType html :set filetype=xhtml 
+
+
+" Insert New Line **************************************************************
+nnoremap <S-Enter> O<ESC> " awesome, inserts new line without going into insert mode
+nnoremap <Enter> o<ESC>
+"nnoremap <Enter> :a<Enter><Enter>.<Enter>
+" map <S-Enter> o
+" set fo-=r " do not insert a comment leader after an enter, (no work, fix!!)
+nnoremap <BS> X
+nnoremap <Space> a<Space><Esc>
+
+
+" Sessions ********************************************************************
+" Sets what is saved when you save a session
+set sessionoptions=blank,buffers,curdir,folds,help,resize,tabpages,winsize
+
+
+" Misc ************************************************************************
+set backspace=indent,eol,start
+set number " Show line numbers
+set matchpairs+=<:>
+  " set visual bell off
+set vb t_vb=
+
+
+" Invisible characters *********************************************************
+set listchars=trail:.,tab:»\ ,eol:¶
+"set nolist
+set nolist
+noremap <Leader>i :set list!<CR> " Toggle invisible chars
+
+" Mouse ***********************************************************************
+"set mouse=a " Enable the mouse
+"behave xterm
+"set selectmode=mouse
+
+
+" Cursor Movement *************************************************************
+" Make cursor move by visual lines instead of file lines (when wrapping)
+map <up> gk
+" map k gk
+imap <up> <C-o>gk
+map <down> gj
+"map j gj
+imap <down> <C-o>gj
+
+inoremap <S-Right> <Esc>vl
+inoremap <S-Left> <Esc>vh
+inoremap <C-S-Right> <Esc>vw
+inoremap <C-S-Left> <Esc>v<S-Left>
+
+nnoremap <C-Left> b
+"nnoremap <S-Left> <C-o>B
+nnoremap <C-Right> w
+"nnoremap <S-Right> <C-o>W
+
+noremap <F12> <Esc>:reg<Cr>
+inoremap <F12> <C-o>:reg<Cr>
+noremap <F11> <Esc>:set im!<Cr>
+inoremap <F11> <C-o>:set im!<Cr>
+
+" Ruby stuff ******************************************************************
+"compiler ruby         " Enable compiler support for ruby
+"map <F5> :!ruby %<CR>
+
+
+" Omni Completion *************************************************************
+autocmd FileType html :set omnifunc=htmlcomplete#CompleteTags
+autocmd FileType python set omnifunc=pythoncomplete#Complete
+autocmd FileType javascript set omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType css set omnifunc=csscomplete#CompleteCSS
+autocmd FileType xml set omnifunc=xmlcomplete#CompleteTags
+autocmd FileType php set omnifunc=phpcomplete#CompletePHP
+autocmd FileType c set omnifunc=ccomplete#Complete
+" May require ruby compiled in
+" autocmd FileType ruby,eruby set omnifunc=rubycomplete#Complete 
+
+" -----------------------------------------------------------------------------  
+" |                              Plug-ins                                     |
+" -----------------------------------------------------------------------------  
+
+source $VIMRUNTIME/macros/matchit.vim
+
+" NERDTree ********************************************************************
+" :noremap <Leader>n :NERDTreeToggle<CR>
+
+" User instead of Netrw when doing an edit /foobar
+" let NERDTreeHijackNetrw=1
+
+" Single click for everything
+" let NERDTreeMouseMode=1
+
+
+" SnippetsEmu *****************************************************************
+"imap <unique> <C-j> <Plug>Jumper
+"let g:snip_start_tag = "_\."
+"let g:snip_end_tag = "\._"
+"let g:snip_elem_delim = ":"
+"let g:snip_set_textmate_cp = '1'  " Tab to expand snippets, not automatically.
+
+" quit
+" :noremap <Leader>q <Esc>:q<CR>
+
+" Toggle wrap
+noremap <Leader>w <Esc>:set wrap!<CR>
+
+" netrw Explore tree 
+noremap <Leader>e :tabnew<CR>:Explore<CR>
+
+" Fuzzy finder
+noremap <Leader>ff :FuzzyFinderFile<CR>
+noremap <Leader>fb :FuzzyFinderBuffer<CR>
+noremap <Leader>fr :FuzzyFinderMruFile<CR>
+noremap <Leader>fm :FuzzyFinderBookmark<CR>
+noremap <F3> :FuzzyFinderAddBookmark<CR>
+vnoremap <F3> :FuzzyFinderAddBookmarkAsSelectedText<CR><CR>
+
+" Tab indents selected line in visual mode
+"" Indent selected lines
+nnoremap <Tab> >l
+vnoremap <Tab> >gv
+"" Unindent selected lines
+nnoremap <S-Tab> <l<Esc>
+vnoremap <S-Tab> <gv
+
+" autocomplpop ***************************************************************
+" complete option
+"set complete=.,w,b,u,t,k
+"let g:AutoComplPop_CompleteOption = '.,w,b,u,t,k'
+"set complete=.
+let g:AutoComplPop_IgnoreCaseOption = 1
+let g:AutoComplPop_BehaviorKeywordLength = 5
+let g:EnhCommentifyBindInInsert = 'No'
+
+
+" wild mode autocompletion (file autocompletion navigation in command mode with <tab> )
+set wildmenu
+
+
+
+" -----------------------------------------------------------------------------  
+" |                             OS Specific                                   |
+" |                      (GUI stuff goes in gvimrc)                           |
+" -----------------------------------------------------------------------------  
+
+" Mac *************************************************************************
+"if has("mac") 
+  "" 
+"endif
+ 
+" Windows *********************************************************************
+if has("gui_win32")
+	" Set Swap directory
+	set directory=d:\temp,c:\temp,.
+endif
+
+" persistent undo
+if has("persistent_undo")
+    set undodir=c:\temp\vim_undo
+	if !isdirectory(&undodir)
+		call mkdir(&undodir)
+	end
+    set undofile
+endif
+
+
+
+
+" -----------------------------------------------------------------------------  
+" |                               Startup                                     |
+" -----------------------------------------------------------------------------  
+" Open NERDTree on start
+"autocmd VimEnter * exe 'NERDTree' | wincmd l 
+
+
+
+" -----------------------------------------------------------------------------  
+" |                               Host specific                               |
+" -----------------------------------------------------------------------------  
+if filereadable(expand("~/.vimrc.local"))
+  source ~/.vimrc.local
+endif
+
+"if hostname() == "foo"
+  " do something
+"endif

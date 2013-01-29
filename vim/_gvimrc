@@ -1,0 +1,44 @@
+" -----------------------------------------------------------------------------  
+" |                            VIM Settings                                   |
+" |                              GUI stuff                                    |
+" -----------------------------------------------------------------------------  
+
+
+" OS Specific *****************************************************************
+if has("gui_macvim")
+	set fuoptions=maxvert,maxhorz " fullscreen options (MacVim only), resized window when changed to fullscreen
+	set guifont=Monaco:h13
+	set guioptions-=T  " remove toolbar
+	set stal=2 " turn on tabs by default
+elseif has("gui_gtk2")
+	set guifont=Monospace
+	set guioptions-=T  " remove toolbar
+elseif has("x11")
+	source $HOME\vimfiles\mswin.vim
+elseif has("gui_win32")
+	
+	source $HOME\vimfiles\mswin.vim
+
+	behave xterm
+	
+	set guioptions-=T  " remove toolbar
+	set guioptions+=m	" menu bar is present
+	set guioptions+=L	" left hand scrollbar
+	set guioptions+=r	"right hand scrollbar
+	set guioptions+=b	"horizontal scrollbar
+	set anti " Antialias font
+	au GUIEnter * simalt ~x	"n
+	" set guifont=Consolas:h11:cANSI
+	set guifont=Consolas:h11:cANSI,Lucida_Console:h10:cANSI,Courier_New:h10:cANSI
+end
+
+noremap <Leader>t <Esc>:tabnew<CR>
+
+" General *********************************************************************
+
+" Default size of window
+
+" Tab headings 
+set gtl=%t%M gtt=%F
+set vb t_vb=
+
