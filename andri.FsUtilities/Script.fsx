@@ -1,6 +1,6 @@
 ﻿
-#load "XML.fs"
-#load "XPath.fs"
+#load "FsXML.fs"
+#load "FsXPath.fs"
 open andri.FsUtilities
 
 open System.IO
@@ -18,12 +18,12 @@ let sxml = @"<contacts>
 </contacts>"
 
 
-let doc = fXML.loadString sxml
+let doc = FsXML.loadString sxml
 doc
-    |> fXML.createNavidator
-    |> fXPath.selectNodes "contacts/contact/name/@att"
+    |> FsXML.createNavidator
+    |> FsXPath.selectNodes "contacts/contact/name/@att"
     |> Seq.head
-        |> fXPath.setValue "Andri atertsdfgsd"
+        |> FsXPath.setValue "Andri atertsdfgsd"
 
 
 doc.InnerXml

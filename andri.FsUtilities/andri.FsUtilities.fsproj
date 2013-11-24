@@ -43,8 +43,8 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="XML.fs" />
-    <Compile Include="XPath.fs" />
+    <Compile Include="FsXML.fs" />
+    <Compile Include="FsXPath.fs" />
     <None Include="Script.fsx" />
   </ItemGroup>
   <PropertyGroup>
