@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BtcClient", "BtcClient.fsproj", "{455409C0-C359-4FEF-907E-3ECA7EC3ABE3}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ConsoleApplication1", "..\ConsoleApplication1\ConsoleApplication1.fsproj", "{4A9A4DD1-11BA-490C-8001-2B035B1AB052}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{455409C0-C359-4FEF-907E-3ECA7EC3ABE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{455409C0-C359-4FEF-907E-3ECA7EC3ABE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{455409C0-C359-4FEF-907E-3ECA7EC3ABE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{455409C0-C359-4FEF-907E-3ECA7EC3ABE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A9A4DD1-11BA-490C-8001-2B035B1AB052}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A9A4DD1-11BA-490C-8001-2B035B1AB052}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A9A4DD1-11BA-490C-8001-2B035B1AB052}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A9A4DD1-11BA-490C-8001-2B035B1AB052}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
