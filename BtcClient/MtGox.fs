@@ -1,70 +1,61 @@
-﻿namespace andri.Utilities
+﻿namespace andri.BtcClient
+    open PubNubMessaging.Core
+    open Newtonsoft.FsJson
+    open System
+    open System.Collections.Generic
+    open _MtGox
 
     module MtGox =
         let PUBNUB_KEY = "sub-c-50d56e1e-2fd9-11e3-a041-02ee2ddab7fe"
-        type __channelsDictType = {
-           ticker_LTCGBP:string
-           ticker_LTCCNY:string
-           depth_BTCHKD:string
-           depth_BTCEUR:string
-           ticker_NMCAUD:string
-           ticker_BTCEUR:string
-           depth_BTCKRW:string
-           depth_BTCCNY:string
-           ticker_BTCCAD:string
-           depth_BTCCHF:string
-           ticker_LTCNOK:string
-           ticker_LTCUSD:string
-           ticker_BTCBTC:string
-           ticker_LTCCAD:string
-           ticker_NMCCNY:string
-           depth_BTCUSD:string
-           ticker_BTCCHF:string
-           depth_BTCAUD:string
-           ticker_BTCCZK:string
-           ticker_BTCSGD:string
-           ticker_NMCJPY:string
-           ticker_BTCNMC:string
-           depth_BTCINR:string
-           depth_BTCSGD:string
-           ticker_BTCLTC:string
-           ticker_LTCEUR:string
-           ticker_BTCINR:string
-           ticker_LTCJPY:string
-           depth_BTCCAD:string
-           ticker_BTCNZD:string
-           depth_BTCGBP:string
-           depth_BTCNOK:string
-           depth_BTCTHB:string
-           ticker_BTCSEK:string
-           ticker_BTCNOK:string
-           ticker_BTCGBP:string
-           trade_lag:string
-           depth_BTCSEK:string
-           depth_BTCDKK:string
-           depth_BTCJPY:string
-           ticker_NMCUSD:string
-           ticker_LTCAUD:string
-           ticker_BTCJPY:string
-           depth_BTCCZK:string
-           ticker_LTCDKK:string
-           ticker_BTCPLN:string
-           ticker_BTCRUB:string
-           ticker_NMCGBP:string
-           ticker_BTCKRW:string
-           ticker_BTCCNY:string
-           depth_BTCNZD:string
-           ticker_BTCHKD:string
-           ticker_BTCTHB:string
-           ticker_BTCUSD:string
-           depth_BTCRUB:string
-           ticker_NMCEUR:string
-           trade_BTC:string
-           ticker_NMCCAD:string
-           depth_BTCPLN:string
-           ticker_BTCDKK:string
-           ticker_BTCAUD:string
-        }
+
+        let private pubnub = new Pubnub("", PUBNUB_KEY)
+
+        type MtGoxLiveTickerProvider(name:string, historyMaxCount:int) =
+            inherit andri.BtcClient.LiveTickerProvider(name)
+            let tickerUpdated = new Event<Ticker>()
+            let queue = new andri.Utilities.EnumerableQueue<DateTime*double>(historyMaxCount)
+            let dvSort (d:DateTime,v:double) = d.Ticks
+            member x.History_Last:seq<DateTime*double> = queue |> Seq.sortBy dvSort// :> seq<DateTime*double>
+            member x.PushResponse (response:Newtonsoft.Json.Linq.JObject) =
+                let channel = jsonString response?channel
+                let ticker = response?ticker
+                let now = jsonLong ticker?now |> _MtGox.ticksToDateTime
+                let high = jsonDouble ticker?high?value
+                let low = jsonDouble ticker?low?value
+                let avg = jsonDouble ticker?avg?value
+                let vwap = jsonDouble ticker?vwap?value // weighted average 
+                let vol = jsonDouble ticker?vol?value   // volume
+                let last_local = jsonDouble ticker?last_local?value // include only the last trade in the selected currency
+                let last_orig = jsonDouble ticker?last_orig?value   // include data of the original last trade 
+                let last_all = jsonDouble ticker?last_all?value // last trade in ANY currency, converted to your currency
+                let last = jsonDouble ticker?last?value // is always the same as last_all
+                let buy = jsonDouble ticker?buy?value
+                let sell = jsonDouble ticker?sell?value
+
+                if queue.Count>historyMaxCount then queue.Dequeue() |> ignore
+                queue.Enqueue (now, last)
+
+                printfn "(%s) currency_spread = last-last_all = %f-%f = %f" name last last_all (last-last_all)
+
+                tickerUpdated.Trigger({Name=name; Last= x.History_Last})
+            member x.pubnubUserCallback(o:obj System.Collections.Generic.List) =
+                let response = o |> Seq.head :?> Newtonsoft.Json.Linq.JObject
+                x.PushResponse(response)
+
+            override x.TickerUpdated with get() = tickerUpdated.Publish
+            
+        let LiveTickerFactory(channel, friendlyName) =
+            let MAXCOUNT = 200
+            let ticker = new MtGoxLiveTickerProvider(friendlyName, MAXCOUNT)
+            let historyCallback (provider:MtGoxLiveTickerProvider) (o:IList<obj>) =
+                let responses = o.[0] :?> IList<obj>
+                printfn "%s" "historyCallback"
+                responses |> Seq.map (fun e -> e :?> Newtonsoft.Json.Linq.JObject) |> Seq.iter provider.PushResponse
+                
+            pubnub.DetailedHistory(channel, MAXCOUNT, historyCallback ticker, errorCallback_generic) |> ignore
+            pubnub.Subscribe(channel, ticker.pubnubUserCallback, connectCallback_generic, errorCallback_generic)
+            ticker
+            
         let PUBNUB_CHANNELS =  {
            ticker_LTCGBP= "0102a446-e4d4-4082-8e83-cc02822f9172";
            ticker_LTCCNY= "0290378c-e3d7-4836-8cb1-2bfae20cc492";

@@ -44,6 +44,9 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\pubnub-c-sharp\csharp.net\3.5\PubNub-Messaging\bin\Debug\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PubNubMessaging.Core">
+      <HintPath>..\..\pubnub-c-sharp\csharp.net\3.5\PubNub-Messaging\bin\Debug\PubNubMessaging.Core.exe</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
@@ -65,8 +68,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Queue.fs" />
     <Compile Include="Newtonsoft.Json.fs" />
-    <Compile Include="BtcClient.fs" />
+    <Compile Include="abstract LiveParamProvider.fs" />
+    <Compile Include="_MtGox.fs" />
+    <Compile Include="MtGox.fs" />
     <None Include="Script.fsx" />
     <None Include="packages.config" />
   </ItemGroup>
