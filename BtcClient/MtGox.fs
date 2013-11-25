@@ -44,17 +44,16 @@
 
             override x.TickerUpdated with get() = tickerUpdated.Publish
             
-        let LiveTickerFactory(channel, friendlyName) =
+        let LiveTickerFactory(channel, friendlyName):LiveTickerProvider =
             let MAXCOUNT = 200
             let ticker = new MtGoxLiveTickerProvider(friendlyName, MAXCOUNT)
             let historyCallback (provider:MtGoxLiveTickerProvider) (o:IList<obj>) =
                 let responses = o.[0] :?> IList<obj>
-                printfn "%s" "historyCallback"
                 responses |> Seq.map (fun e -> e :?> Newtonsoft.Json.Linq.JObject) |> Seq.iter provider.PushResponse
                 
             pubnub.DetailedHistory(channel, MAXCOUNT, historyCallback ticker, errorCallback_generic) |> ignore
             pubnub.Subscribe(channel, ticker.pubnubUserCallback, connectCallback_generic, errorCallback_generic)
-            ticker
+            ticker :> LiveTickerProvider
             
         let PUBNUB_CHANNELS =  {
            ticker_LTCGBP= "0102a446-e4d4-4082-8e83-cc02822f9172";
