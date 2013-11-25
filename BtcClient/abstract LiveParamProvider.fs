@@ -9,7 +9,7 @@
         }
     [<AbstractClass>]
     type LiveTickerProvider(name:string) =
-        member val Name:string = name
+        member x.Name = name
         abstract TickerUpdated:IEvent<Ticker> with get
         (*
     [<AbstractClass>]
