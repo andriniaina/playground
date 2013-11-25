@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Log.fs" />
+    <Compile Include="Web.fs" />
     <Compile Include="Queue.fs" />
     <Compile Include="Newtonsoft.Json.fs" />
     <Compile Include="abstract LiveParamProvider.fs" />

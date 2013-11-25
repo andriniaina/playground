@@ -3,6 +3,9 @@
         open System
         open andri.Log
 
+        let BASE_URL = "https://data.mtgox.com/api/2/"
+        let BASE_URI = new Uri(BASE_URL)
+
         let ticksToDateTime (unixTimestamp:int64) =
             let unixYear0 = new DateTime(1970, 1, 1);
             let unixTimeStampInTicks = unixTimestamp * 10L
@@ -15,6 +18,17 @@
             debugf "disconnectCallback: %s" (o.ToString())
         let errorCallback_generic o =
             errorf "errorCallback: %s" (o.ToString())
+            
+        let toRealValue currency (v:int) =
+            match currency with
+            | "BTC" -> (float v)/1e8
+            | "JPY" | "SEK" -> (float v)/1e3
+            | _ -> (float v)/1e5
+        let toIntValue currency (v:float) =
+            match currency with
+            | "BTC" -> Convert.ToInt32(Math.Round(v*1e8))
+            | "JPY" | "SEK" -> Convert.ToInt32(Math.Round(v*1e3))
+            | _ -> Convert.ToInt32(Math.Round(v*1e5))
 
         type channelsDictType = {
            ticker_LTCGBP:string

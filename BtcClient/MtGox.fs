@@ -5,6 +5,7 @@
     open System.Collections.Generic
     open _MtGox
     open andri.Log
+    open andri.Utilities
 
     module MtGox =
         let PUBNUB_KEY = "sub-c-50d56e1e-2fd9-11e3-a041-02ee2ddab7fe"
@@ -56,6 +57,21 @@
             pubnub.DetailedHistory(channel, MAXCOUNT, historyCallback ticker, errorCallback_generic) |> ignore
             pubnub.Subscribe(channel, ticker.pubnubUserCallback, connectCallback_generic, errorCallback_generic)
             ticker
+
+        type QuoteType =
+            | Bid | Ask
+            override x.ToString() = match x with | Bid -> "bid" | Ask -> "ask"
+        let Quote qType (famount:float) currency1 currency2 =
+            let response =
+                new Uri(BASE_URI, sprintf "%s%s/money/order/quote?type=%s&amount=%i" currency1 currency2 (qType.ToString()) (toIntValue currency1 famount))
+                |> Web.getResponse
+                |> Async.RunSynchronously
+                |> Newtonsoft.Json.Linq.JObject.Parse
+            let status = jsonString response?result
+            match status with
+            | "success" -> jsonInt response?data?amount |> toRealValue currency2
+            | _ -> failwith "Erreur de communication"
+
             
         let PUBNUB_CHANNELS =  {
            ticker_LTCGBP= "0102a446-e4d4-4082-8e83-cc02822f9172";

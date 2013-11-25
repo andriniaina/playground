@@ -5,15 +5,20 @@
 #r @"Fsharp.Charting"
 #r @"System.Windows.Forms"
 #r @"System.Windows.Forms.DataVisualization"
+#load "Web.fs"
 #load "Queue.fs"
+#load "Log.fs"
 #load "Newtonsoft.Json.fs"
 #load "abstract LiveParamProvider.fs"
 #load "_MtGox.fs"
+open andri.BtcClient
 #load "MtGox.fs"
+open andri.BtcClient
 
 
 open System
 open PubNubMessaging.Core
+open andri.Utilities
 open andri.BtcClient
 open Newtonsoft.FsJson
 open FSharp.Charting
@@ -38,3 +43,9 @@ let chartEUR = clock 1000 |> Event.map (fun _ -> tickerEUR.History_Last) |> Live
 let chartUSD = clock 1000 |> Event.map (fun _ -> tickerUSD.History_Last) |> LiveChart.Line
 Chart.Combine([chartEUR;chartUSD]).ShowChart()
 
+
+MtGox.Quote (MtGox.QuoteType.Bid) (1.0) "BTC" "USD"
+MtGox.Quote (MtGox.QuoteType.Ask) (1.0) "BTC" "USD"
+
+
+MtGox.Quote (MtGox.QuoteType.Ask) (500.0) "EUR" "BTC"
