@@ -68,13 +68,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Log.fs" />
     <Compile Include="Queue.fs" />
     <Compile Include="Newtonsoft.Json.fs" />
     <Compile Include="abstract LiveParamProvider.fs" />
     <Compile Include="_MtGox.fs" />
     <Compile Include="MtGox.fs" />
-    <None Include="Script.fsx" />
     <None Include="packages.config" />
+    <None Include="Program.fsx" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

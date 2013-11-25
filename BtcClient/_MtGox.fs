@@ -1,18 +1,20 @@
 ﻿namespace andri.BtcClient
     module _MtGox =
         open System
+        open andri.Log
+
         let ticksToDateTime (unixTimestamp:int64) =
             let unixYear0 = new DateTime(1970, 1, 1);
             let unixTimeStampInTicks = unixTimestamp * 10L
             new DateTime(unixYear0.Ticks + unixTimeStampInTicks)
 
         let connectCallback_generic (o:obj System.Collections.Generic.List) =
-            let response = o |> Seq.nth 1 :?> string
-            printfn "%s: %s" "connectCallback" (response)
+            let status = o |> Seq.nth 1 :?> string
+            debugf "connectCallback: %s" (status)
         let disconnectCallback_generic o =
-            printfn "%s" "errorCallback"
+            debugf "disconnectCallback: %s" (o.ToString())
         let errorCallback_generic o =
-            printfn "errorCallback %s" (o.ToString())
+            errorf "errorCallback: %s" (o.ToString())
 
         type channelsDictType = {
            ticker_LTCGBP:string

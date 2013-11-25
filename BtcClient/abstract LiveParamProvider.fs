@@ -11,14 +11,8 @@
     type LiveTickerProvider(name:string) =
         member x.Name = name
         abstract TickerUpdated:IEvent<Ticker> with get
-        (*
-    [<AbstractClass>]
-    type AbstractLiveTickerCollection() =
-        abstract Add : LiveTickerProvider -> unit
-        abstract TickerUpdated:IEvent<Ticker> with get
-    *)
+
     type LiveTickerCollection(providers:IList<LiveTickerProvider>) =
-        //inherit LiveTickerCollection()
         let tickerUpdated = new Event<Ticker>()
         let bubbleEvent (arg:Ticker) =
             tickerUpdated.Trigger(arg)

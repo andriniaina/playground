@@ -4,6 +4,7 @@
     open System
     open System.Collections.Generic
     open _MtGox
+    open andri.Log
 
     module MtGox =
         let PUBNUB_KEY = "sub-c-50d56e1e-2fd9-11e3-a041-02ee2ddab7fe"
@@ -17,6 +18,7 @@
             let dvSort (d:DateTime,v:double) = d.Ticks
             member x.History_Last:seq<DateTime*double> = queue |> Seq.sortBy dvSort// :> seq<DateTime*double>
             member x.PushResponse (response:Newtonsoft.Json.Linq.JObject) =
+                debugf "Decoding MtGox ticker response"
                 let channel = jsonString response?channel
                 let ticker = response?ticker
                 let now = jsonLong ticker?now |> _MtGox.ticksToDateTime
@@ -35,7 +37,7 @@
                 if queue.Count>historyMaxCount then queue.Dequeue() |> ignore
                 queue.Enqueue (now, last)
 
-                printfn "(%s) currency_spread = last-last_all = %f-%f = %f" name last last_all (last-last_all)
+                debugf "(%s) currency_spread = last-last_all = %f-%f = %f" name last last_all (last-last_all)
 
                 tickerUpdated.Trigger({Name=name; Last= x.History_Last})
             member x.pubnubUserCallback(o:obj System.Collections.Generic.List) =
@@ -44,7 +46,7 @@
 
             override x.TickerUpdated with get() = tickerUpdated.Publish
             
-        let LiveTickerFactory(channel, friendlyName):LiveTickerProvider =
+        let LiveTickerFactory(channel, friendlyName) =
             let MAXCOUNT = 200
             let ticker = new MtGoxLiveTickerProvider(friendlyName, MAXCOUNT)
             let historyCallback (provider:MtGoxLiveTickerProvider) (o:IList<obj>) =
@@ -53,7 +55,7 @@
                 
             pubnub.DetailedHistory(channel, MAXCOUNT, historyCallback ticker, errorCallback_generic) |> ignore
             pubnub.Subscribe(channel, ticker.pubnubUserCallback, connectCallback_generic, errorCallback_generic)
-            ticker :> LiveTickerProvider
+            ticker
             
         let PUBNUB_CHANNELS =  {
            ticker_LTCGBP= "0102a446-e4d4-4082-8e83-cc02822f9172";
