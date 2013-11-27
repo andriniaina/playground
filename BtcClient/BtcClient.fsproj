@@ -68,15 +68,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\andri.FsUtilities\Strings.fs">
+      <Link>Strings.fs</Link>
+    </Compile>
+    <Compile Include="..\andri.FsUtilities\Queue.fs">
+      <Link>Queue.fs</Link>
+    </Compile>
+    <Compile Include="..\andri.FsUtilities\Web.fs">
+      <Link>Web.fs</Link>
+    </Compile>
+    <Compile Include="..\andri.FsUtilities\Finance.fs">
+      <Link>Finance.fs</Link>
+    </Compile>
     <Compile Include="Log.fs" />
-    <Compile Include="Web.fs" />
-    <Compile Include="Queue.fs" />
     <Compile Include="Newtonsoft.Json.fs" />
     <Compile Include="abstract LiveParamProvider.fs" />
     <Compile Include="_MtGox.fs" />
     <Compile Include="MtGox.fs" />
+    <Compile Include="MtGoxHttp.fs" />
     <None Include="packages.config" />
     <None Include="Program.fsx" />
+    <Compile Include="BitcoinCharts.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>

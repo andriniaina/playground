@@ -5,14 +5,18 @@
 #r @"Fsharp.Charting"
 #r @"System.Windows.Forms"
 #r @"System.Windows.Forms.DataVisualization"
-#load "Web.fs"
-#load "Queue.fs"
+#load "../andri.FsUtilities/Finance.fs"
+#load "../andri.FsUtilities/Web.fs"
+#load "../andri.FsUtilities/Queue.fs"
+#load "../andri.FsUtilities/Strings.fs"
 #load "Log.fs"
 #load "Newtonsoft.Json.fs"
 #load "abstract LiveParamProvider.fs"
 #load "_MtGox.fs"
 open andri.BtcClient
 #load "MtGox.fs"
+#load "MtGoxHttp.fs"
+#load "BitCoinCharts.fs"
 open andri.BtcClient
 
 
@@ -44,8 +48,17 @@ let chartUSD = clock 1000 |> Event.map (fun _ -> tickerUSD.History_Last) |> Live
 Chart.Combine([chartEUR;chartUSD]).ShowChart()
 
 
-MtGox.Quote (MtGox.QuoteType.Bid) (1.0) "BTC" "USD"
-MtGox.Quote (MtGox.QuoteType.Ask) (1.0) "BTC" "USD"
+MtGoxHttp.Quote (MtGoxHttp.QuoteType.Bid) (1.0) "BTC" "USD"
+MtGoxHttp.Quote (MtGoxHttp.QuoteType.Ask) (1.0) "BTC" "USD"
+let ticker = MtGoxHttp.TickerFast "BTC" "USD"
+jsonString ticker?now
+jsonInt ticker?last?value_int
+
+MtGoxHttp.Quote (MtGoxHttp.QuoteType.Ask) (1.0) "BTC" "EUR"
+let mtgoxHistory = BitcoinCharts.History "mtgoxUSD" (DateTime.UtcNow.Subtract(new TimeSpan(1,0,0))) |> Async.RunSynchronously
+let chart = mtgoxHistory |> Seq.mapi (fun i r -> if i%15=0 then Some(r.Time,r.Price) else None) |> Seq.filter (Option.isSome) |> Seq.map (Option.get) |> FSharp.Charting.Chart.Line
+chart.ShowChart()
+
+let vol = Finance.vol (mtgoxHistory |> Seq.map (fun e -> e.Price) |> Array.ofSeq )
 
 
-MtGox.Quote (MtGox.QuoteType.Ask) (500.0) "EUR" "BTC"
