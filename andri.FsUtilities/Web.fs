@@ -4,8 +4,12 @@
         open System.Net
         open System.IO
 
+        let mutable proxy:IWebProxy = null
+
         let createWebRequest (uri:Uri) =
-            WebRequest.Create(uri)
+            let req = WebRequest.Create(uri)
+            if proxy<>null then req.Proxy <- proxy
+            req
 
         let getResponse (uri:Uri) =
             async {

@@ -1,7 +1,9 @@
-#r @"D:\dev\pubnub-c-sharp\csharp.net\3.5\PubNub-Messaging\bin\Debug\PubNubMessaging.Core.exe"
-#r @"D:\dev\pubnub-c-sharp\csharp.net\3.5\PubNub-Messaging\bin\Debug\Newtonsoft.Json.dll"
-
 #I @"packages\FSharp.Charting.0.90.5\lib\net40"
+#I @"D:\dev\pubnub-c-sharp\csharp.net\3.5\PubNub-Messaging\bin\Debug"
+#I @"c:\dev\pubnub-c-sharp\csharp.net\3.5\PubNub-Messaging\bin\Debug"
+
+#r @"PubNubMessaging.Core"
+#r @"Newtonsoft.Json"
 #r @"Fsharp.Charting"
 #r @"System.Windows.Forms"
 #r @"System.Windows.Forms.DataVisualization"
@@ -48,9 +50,12 @@ let chartUSD = clock 1000 |> Event.map (fun _ -> tickerUSD.History_Last) |> Live
 Chart.Combine([chartEUR;chartUSD]).ShowChart()
 
 
-MtGoxHttp.Quote (MtGoxHttp.QuoteType.Bid) (1.0) "BTC" "USD"
-MtGoxHttp.Quote (MtGoxHttp.QuoteType.Ask) (1.0) "BTC" "USD"
+#load "proxy.fs"
+let bid = MtGoxHttp.Quote (MtGoxHttp.QuoteType.Bid) (1.0) "BTC" "USD"
+let ask = MtGoxHttp.Quote (MtGoxHttp.QuoteType.Ask) (1.0) "BTC" "USD"
 let ticker = MtGoxHttp.TickerFast "BTC" "USD"
+let spread = bid-ask
+let spreadP = spread/bid
 jsonString ticker?now
 jsonInt ticker?last?value_int
 
