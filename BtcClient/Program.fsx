@@ -18,7 +18,6 @@
 open andri.BtcClient
 #load "MtGox.fs"
 #load "MtGoxHttp.fs"
-#load "BitCoinCharts.fs"
 open andri.BtcClient
 
 
@@ -51,9 +50,9 @@ Chart.Combine([chartEUR;chartUSD]).ShowChart()
 
 
 #load "proxy.fs"
-let bid = MtGoxHttp.Quote (MtGoxHttp.QuoteType.Bid) (1.0) "BTC" "USD"
-let ask = MtGoxHttp.Quote (MtGoxHttp.QuoteType.Ask) (1.0) "BTC" "USD"
-let ticker = MtGoxHttp.TickerFast "BTC" "USD"
+let bid = MtGoxHttp.Quote (MtGoxHttp.QuoteType.Bid) (1.0) "BTC" "USD" |> Async.RunSynchronously
+let ask = MtGoxHttp.Quote (MtGoxHttp.QuoteType.Ask) (1.0) "BTC" "USD" |> Async.RunSynchronously
+let ticker = MtGoxHttp.TickerFast "BTC" "USD" |> Async.RunSynchronously
 let spread = bid-ask
 let spreadP = spread/bid
 jsonString ticker?now
@@ -64,6 +63,24 @@ let mtgoxHistory = BitcoinCharts.History "mtgoxUSD" (DateTime.UtcNow.Subtract(ne
 let chart = mtgoxHistory |> Seq.mapi (fun i r -> if i%15=0 then Some(r.Time,r.Price) else None) |> Seq.filter (Option.isSome) |> Seq.map (Option.get) |> FSharp.Charting.Chart.Line
 chart.ShowChart()
 
-let vol = Finance.vol (mtgoxHistory |> Seq.map (fun e -> e.Price) |> Array.ofSeq )
+let vol = MathFi.vol (mtgoxHistory |> Seq.map (fun e -> e.Price) |> Array.ofSeq )
 
+#load "BitCoinCharts.fs"
+open andri.BtcClient
+let allmarkets = BitcoinCharts.AllMarkets.Ticker() |> Newtonsoft.Json.Linq.JArray.Parse
+let highestbid_USD = BitcoinCharts.AllMarkets.Highest_bid "USD"
+jsonString highestbid_USD?symbol, jsonDouble highestbid_USD?bid
+let lowestAsk_USD = BitcoinCharts.AllMarkets.Lowest_ask "USD"
+jsonString lowestAsk_USD?symbol, jsonDouble lowestAsk_USD?bid
+BitcoinCharts.AllMarkets.TickerSimple "EUR" |> List.ofSeq
 
+let tickers_webresponse =
+    BitcoinCharts.AllMarkets.async_Ticker ()
+    |> Async.RunSynchronously
+    |> Newtonsoft.Json.Linq.JArray.Parse
+    |> Seq.map (fun e-> jsonString e?symbol, jsonDouble e?bid, jsonDouble e?ask)
+    |> Seq.filter (fun e ->
+                    let s,b,a = e
+                    printfn "%f" b
+                    b>0.0)
+    |> List.ofSeq

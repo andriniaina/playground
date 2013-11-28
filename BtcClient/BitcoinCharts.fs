@@ -4,6 +4,8 @@
     open System.Globalization
     open System.Collections.Generic
     open andri.Utilities
+    open Newtonsoft.Json
+    open Newtonsoft.FsJson
     
     module BitcoinCharts =
         let private BASEURL = "http://api.bitcoincharts.com/v1/"
@@ -34,6 +36,50 @@
                         |> csvSplitByRow
                         |> Seq.map (csvSplitByColumn >> csvParseHistoryRow)
                 }
+        module AllMarkets = 
+            let async_Ticker () = 
+                let uri = new Uri(BASEURI, "markets.json")
+                async{
+                    let! response = Web.getResponse uri
+                    return response
+                }
+            let Ticker = async_Ticker >> Async.RunSynchronously
+
+            let async_TickerSimple currency =
+                async {
+                let! tickers_webresponse = async_Ticker ()
+                let tickers = Newtonsoft.Json.Linq.JArray.Parse  tickers_webresponse
+                return
+                    tickers
+                    |> Seq.filter (fun e -> jsonString e?currency = currency)
+                    |> Seq.map (fun e-> jsonString e?symbol, jsonDouble e?bid, jsonDouble e?ask)
+                    |> Seq.filter (fun (s,b,a) ->
+                                        //let s,b,a = e
+                                        printfn "%f" b
+                                        b>0.0)
+                }
+            let TickerSimple = async_TickerSimple >> Async.RunSynchronously
+
+            /// ne pas faire confiance au marché
+            let async_Highest_bid currency =
+                async{
+                    let! webresponse_tickers = async_Ticker()
+                    return Newtonsoft.Json.Linq.JArray.Parse webresponse_tickers
+                        |> Seq.filter (fun e -> jsonString e?currency=currency && jsonDouble e?ask>0.0 )
+                        |> Seq.maxBy (fun e -> jsonDouble e?bid)
+                }
+            /// ne pas faire confiance au marché
+            let Highest_bid = async_Highest_bid >> Async.RunSynchronously
+            /// ne pas faire confiance au marché
+            let async_Lowest_ask currency =
+                async{
+                    let! webresponse_tickers = async_Ticker()
+                    return Newtonsoft.Json.Linq.JArray.Parse webresponse_tickers
+                        |> Seq.filter (fun e -> jsonString e?currency=currency && jsonDouble e?ask>0.0 )
+                        |> Seq.minBy (fun e -> jsonDouble e?ask)
+                }
+            /// ne pas faire confiance au marché
+            let Lowest_ask =async_Lowest_ask >> Async.RunSynchronously
 
                 
 

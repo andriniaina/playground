@@ -86,9 +86,9 @@
     <Compile Include="_MtGox.fs" />
     <Compile Include="MtGox.fs" />
     <Compile Include="MtGoxHttp.fs" />
+    <Compile Include="BitcoinCharts.fs" />
     <None Include="packages.config" />
     <None Include="Program.fsx" />
-    <Compile Include="BitcoinCharts.fs" />
   </ItemGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
