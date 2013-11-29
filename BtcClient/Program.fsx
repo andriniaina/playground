@@ -72,7 +72,7 @@ let highestbid_USD = BitcoinCharts.AllMarkets.Highest_bid "USD"
 jsonString highestbid_USD?symbol, jsonDouble highestbid_USD?bid
 let lowestAsk_USD = BitcoinCharts.AllMarkets.Lowest_ask "USD"
 jsonString lowestAsk_USD?symbol, jsonDouble lowestAsk_USD?bid
-BitcoinCharts.AllMarkets.TickerSimple "EUR" |> List.ofSeq
+BitcoinCharts.AllMarkets.TickerSimple "USD" |> List.ofSeq
 
 let tickers_webresponse =
     BitcoinCharts.AllMarkets.async_Ticker ()
