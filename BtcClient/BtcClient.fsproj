@@ -81,7 +81,7 @@
       <Link>Finance.fs</Link>
     </Compile>
     <Compile Include="Log.fs" />
-    <Compile Include="Newtonsoft.Json.fs" />
+    <Compile Include="Newtonsoft.FsJson.fs" />
     <Compile Include="abstract LiveParamProvider.fs" />
     <Compile Include="_MtGox.fs" />
     <Compile Include="MtGox.fs" />

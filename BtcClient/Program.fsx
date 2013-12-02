@@ -79,7 +79,7 @@ let dataUSD =
     |> Seq.mapi (fun i r -> if i%15=0 then Some(r.Time,r.Price) else None) |> Seq.filter (Option.isSome) |> Seq.map (Option.get)
 let dataEUR =
     BitcoinCharts.HistoryMultiple "mtgoxEUR" (DateTime.UtcNow.Subtract(new TimeSpan(10,0,0))) (DateTime.UtcNow)
-    |> Seq.mapi (fun i r -> if i%15=0 then Some(r.Time,r.Price) else None) |> Seq.filter (Option.isSome) |> Seq.map (Option.get)
+    |> Seq.mapi (fun i r -> if i%15=0 then Some(r.Time,r.Price*1.36) else None) |> Seq.filter (Option.isSome) |> Seq.map (Option.get)
 Chart.Combine([FSharp.Charting.Chart.FastLine(dataUSD, Name="USD");FSharp.Charting.Chart.FastLine(dataEUR, Name="EUR")]).WithLegend().ShowChart()
 
 let vol = MathFi.vol (mtgoxHistory |> Seq.map (fun e -> e.Price) |> Array.ofSeq )
