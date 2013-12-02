@@ -36,12 +36,25 @@
   <Import Project="$(MSBuildExtensionsPath32)\..\Microsoft F#\v4.0\Microsoft.FSharp.Targets" Condition=" Exists('$(MSBuildBinPath)\Microsoft.Build.Tasks.v4.0.dll')" />
   <ItemGroup>
     <Compile Include="Log.fs" />
-    <Compile Include="Web.fs" />
-    <Compile Include="Newtonsoft.Json.fs" />
-    <Compile Include="Queue.fs" />
+    <Compile Include="..\andri.FsUtilities\MathFi.fs">
+      <Link>MathFi.fs</Link>
+    </Compile>
+    <Compile Include="..\andri.FsUtilities\Web.fs">
+      <Link>Web.fs</Link>
+    </Compile>
+    <Compile Include="Newtonsoft.FsJson.fs">
+      <Link>Newtonsoft.FsJson.fs</Link>
+    </Compile>
+    <Compile Include="..\andri.FsUtilities\Queue.fs">
+      <Link>Queue.fs</Link>
+    </Compile>
     <Compile Include="abstract LiveParamProvider.fs" />
     <Compile Include="_MtGox.fs" />
     <Compile Include="MtGox.fs" />
+    <Compile Include="MtGoxHttp.fs">
+      <Link>MtGoxHttp.fs</Link>
+    </Compile>
+    <Compile Include="BitcoinCharts.fs" />
     <None Include="Program.fsx" />
   </ItemGroup>
   <ItemGroup>
