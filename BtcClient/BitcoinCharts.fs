@@ -18,7 +18,7 @@
         let private toUnixTicks (d:DateTime) = (d.Ticks-unix0.Ticks)/10000000L
         let private csvSplitByRow = Strings.SplitByChar '\n'
         let private csvSplitByColumn = Strings.SplitByChar ','
-        type History = {Time:DateTime; Price:float; Amount:float}
+        type HistoryData = {Time:DateTime; Price:float; Amount:float}
         let private csvParseHistoryRow =
             function
                 | [|t;p;a|] -> { Time=parseUnixTicks t; Price=parseFloat p; Amount=parseFloat a }
@@ -26,9 +26,10 @@
 
 
         /// mtgoxUSD
-        let History (market) (start) =
+        let History1 (market) (start) =
             let uri = new Uri(BASEURI, sprintf "trades.csv?symbol=%s&start=%i" market (toUnixTicks start))
             async {
+                printfn "downloading %s %s" market (start.ToString())
                 let! response = Web.getResponse uri
                 System.IO.File.WriteAllText(@"d:\temp\btchistory.csv", response)
                 //let response = System.IO.File.ReadAllText(@"d:\temp\btchistory.csv")
@@ -36,6 +37,14 @@
                         |> csvSplitByRow
                         |> Seq.map (csvSplitByColumn >> csvParseHistoryRow)
                 }
+        let rec HistoryMultiple (market) (d1) (d2) : seq<HistoryData> =
+                let data = History1 market d1 |> Async.RunSynchronously
+                let d1' = (Seq.last data).Time
+                if d1'=d1 then
+                    data
+                else
+                    data |> Seq.append (HistoryMultiple market d1' d2)
+
         module AllMarkets = 
             let async_Ticker () = 
                 let uri = new Uri(BASEURI, "markets.json")
