@@ -4,19 +4,19 @@
         open System.Net
         open System.IO
 
-        let mutable proxy:IWebProxy = null
-
         let createWebRequest (uri:Uri) =
             let req = WebRequest.Create(uri)
-            if proxy<>null then req.Proxy <- proxy
+            req.Proxy <- ServiceLocator.get "webproxy" (fun()-> null :> IWebProxy)
             req
 
         let getResponse (uri:Uri) =
-            async {
-                let req = uri |> createWebRequest
-                let! response = req.AsyncGetResponse()
-                use stream = response.GetResponseStream()
-                use reader = new StreamReader(stream)
-                return reader.ReadToEnd()
-                }
+            ServiceLocator.get (sprintf "webrequest:%s" uri.PathAndQuery) (fun()->
+                async {
+                    let req = uri |> createWebRequest
+                    let! response = req.AsyncGetResponse()
+                    use stream = response.GetResponseStream()
+                    use reader = new StreamReader(stream)
+                    return reader.ReadToEnd()
+                    }
+            )
 

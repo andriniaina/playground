@@ -10,14 +10,22 @@
     module MtGox =
         let PUBNUB_KEY = "sub-c-50d56e1e-2fd9-11e3-a041-02ee2ddab7fe"
 
-        let private pubnub = new Pubnub("", PUBNUB_KEY)
+        //let private _pubnub = new Pubnub("", PUBNUB_KEY)
+        //let private pubnub() = ServiceLocator.get "pubnub" (fun()-> _pubnub)
 
+        
+        type PubnubWrapper(pubnub:Pubnub) =
+            abstract member DetailedHistory: string-> int-> (IList<obj>->unit)-> (PubnubClientError->unit) -> bool
+            default x.DetailedHistory channel count userCallback errorCallback = pubnub.DetailedHistory(channel, count, userCallback, errorCallback)
+            abstract member Subscribe: string -> (IList<obj>->unit) -> (IList<obj>->unit) -> (PubnubClientError->unit) -> unit
+            default x.Subscribe channel userCallback connectCallback errorCallback = pubnub.Subscribe(channel, userCallback, connectCallback, errorCallback)
+            
         type MtGoxLiveTickerProvider(name:string, historyMaxCount:int) =
             inherit andri.BtcClient.LiveTickerProvider(name)
             let tickerUpdated = new Event<Ticker>()
-            let queue = new andri.Utilities.EnumerableQueue<DateTime*double>(historyMaxCount)
+            let data = new andri.Utilities.EnumerableQueue<DateTime*double>(historyMaxCount)
             let dvSort (d:DateTime,v:double) = d.Ticks
-            member x.History_Last:seq<DateTime*double> = queue |> Seq.sortBy dvSort// :> seq<DateTime*double>
+            member x.History_Last:seq<DateTime*double> = data |> Seq.sortBy dvSort// :> seq<DateTime*double>
             member x.PushResponse (response:Newtonsoft.Json.Linq.JObject) =
                 debugf "Decoding MtGox ticker response"
                 let channel = jsonString response?channel
@@ -35,27 +43,27 @@
                 let buy = jsonDouble ticker?buy?value
                 let sell = jsonDouble ticker?sell?value
 
-                if queue.Count>historyMaxCount then queue.Dequeue() |> ignore
-                queue.Enqueue (now, last)
+                if data.Count>historyMaxCount then data.Dequeue() |> ignore
+                data.Enqueue (now, last)
 
                 debugf "(%s) currency_spread = last-last_all = %f-%f = %f" name last last_all (last-last_all)
 
                 tickerUpdated.Trigger({Name=name; Last= x.History_Last})
-            member x.pubnubUserCallback(o:obj System.Collections.Generic.List) =
-                let response = o |> Seq.head :?> Newtonsoft.Json.Linq.JObject
+            member x.subscribeCallback(o:IList<obj>) =
+                let response = o :?> (IList<Newtonsoft.Json.Linq.JObject>) |> Seq.head
                 x.PushResponse(response)
 
             override x.TickerUpdated with get() = tickerUpdated.Publish
             
-        let LiveTickerFactory(channel, friendlyName) =
+        let LiveTickerFactory(pubnub:PubnubWrapper, channel, friendlyName) =
             let MAXCOUNT = 200
             let ticker = new MtGoxLiveTickerProvider(friendlyName, MAXCOUNT)
             let historyCallback (provider:MtGoxLiveTickerProvider) (o:IList<obj>) =
                 let responses = o.[0] :?> IList<obj>
-                responses |> Seq.map (fun e -> e :?> Newtonsoft.Json.Linq.JObject) |> Seq.iter provider.PushResponse
+                responses |> Seq.cast<Newtonsoft.Json.Linq.JObject> |> Seq.iter provider.PushResponse
                 
-            pubnub.DetailedHistory(channel, MAXCOUNT, historyCallback ticker, errorCallback_generic) |> ignore
-            pubnub.Subscribe(channel, ticker.pubnubUserCallback, connectCallback_generic, errorCallback_generic)
+            pubnub.DetailedHistory  channel   MAXCOUNT   (historyCallback ticker)   (errorCallback_generic)  |> ignore
+            pubnub.Subscribe  channel  (ticker.subscribeCallback)  connectCallback_generic  errorCallback_generic 
             ticker
 
             

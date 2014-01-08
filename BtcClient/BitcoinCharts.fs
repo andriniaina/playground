@@ -7,18 +7,18 @@
     open Newtonsoft.Json
     open Newtonsoft.FsJson
     
+    type HistoryData = {Time:DateTime; Price:float; Amount:float}
     module BitcoinCharts =
         let private BASEURL = "http://api.bitcoincharts.com/v1/"
         let private BASEURI = new Uri(BASEURL)
         let private formatInfo_US = new NumberFormatInfo(NumberDecimalSeparator=".")
-        let private parseFloat s = Convert.ToDouble(s, formatInfo_US)
-        let private parseInt s = Convert.ToInt32(s, formatInfo_US)
+        let parseFloat s = Convert.ToDouble(s, formatInfo_US)
+        let parseInt s = Convert.ToInt32(s, formatInfo_US)
         let private unix0 = new DateTime(1970, 1,1)
-        let private parseUnixTicks s = new DateTime(unix0.Ticks+10000000L*Convert.ToInt64(s, formatInfo_US))
-        let private toUnixTicks (d:DateTime) = (d.Ticks-unix0.Ticks)/10000000L
+        let parseUnixTicks s = new DateTime(unix0.Ticks+10000000L*Convert.ToInt64(s, formatInfo_US))
+        let toUnixTicks (d:DateTime) = (d.Ticks-unix0.Ticks)/10000000L
         let private csvSplitByRow = Strings.SplitByChar '\n'
         let private csvSplitByColumn = Strings.SplitByChar ','
-        type HistoryData = {Time:DateTime; Price:float; Amount:float}
         let private csvParseHistoryRow =
             function
                 | [|t;p;a|] -> { Time=parseUnixTicks t; Price=parseFloat p; Amount=parseFloat a }
@@ -26,24 +26,22 @@
 
 
         /// mtgoxUSD
-        let History1 (market) (start) =
+        let HistorySample (market) (start) =
             let uri = new Uri(BASEURI, sprintf "trades.csv?symbol=%s&start=%i" market (toUnixTicks start))
             async {
                 printfn "downloading %s %s" market (start.ToString())
                 let! response = Web.getResponse uri
-                System.IO.File.WriteAllText(@"d:\temp\btchistory.csv", response)
-                //let response = System.IO.File.ReadAllText(@"d:\temp\btchistory.csv")
                 return response
                         |> csvSplitByRow
                         |> Seq.map (csvSplitByColumn >> csvParseHistoryRow)
                 }
-        let rec HistoryMultiple (market) (d1) (d2) : seq<HistoryData> =
-                let data = History1 market d1 |> Async.RunSynchronously
+        let rec HistoryFull (market) (d1) (d2) : seq<HistoryData> =
+                let data = HistorySample market d1 |> Async.RunSynchronously
                 let d1' = (Seq.last data).Time
                 if d1'=d1 then
                     data
                 else
-                    data |> Seq.append (HistoryMultiple market d1' d2)
+                    data |> Seq.append (HistoryFull market d1' d2)
 
         module AllMarkets = 
             let async_Ticker () = 
@@ -52,7 +50,7 @@
                     let! response = Web.getResponse uri
                     return response
                 }
-            let Ticker = async_Ticker >> Async.RunSynchronously
+            let Ticker = async_Ticker >> Async.RunSynchronously >> Newtonsoft.Json.Linq.JArray.Parse
 
             let async_TickerSimple currency =
                 async {
@@ -61,12 +59,10 @@
                 return
                     tickers
                     |> Seq.filter (fun e -> jsonString e?currency = currency)
-                    |> Seq.map (fun e-> jsonString e?symbol, jsonDouble e?bid, jsonDouble e?ask)
-                    |> Seq.filter (fun (s,b,a) ->
-                                        //let s,b,a = e
-                                        printfn "%f" b
-                                        b>0.0)
+                    |> Seq.map (fun e-> jsonString e?symbol, jsonDouble e?bid, jsonDouble e?ask, jsonDouble e?close)
+                    |> Seq.filter (fun (s,b,a,c) -> b>0.0)
                 }
+            /// symbol,bid,ask,close
             let TickerSimple = async_TickerSimple >> Async.RunSynchronously
 
             /// ne pas faire confiance au marché

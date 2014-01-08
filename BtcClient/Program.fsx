@@ -8,11 +8,13 @@
 #r @"System.Windows.Forms"
 #r @"System.Windows.Forms.DataVisualization"
 #load "../andri.FsUtilities/Finance.fs"
+#load "../andri.FsUtilities/ServiceLocator.fs"
+open andri.Utilities
 #load "../andri.FsUtilities/Web.fs"
 #load "../andri.FsUtilities/Queue.fs"
 #load "../andri.FsUtilities/Strings.fs"
 #load "Log.fs"
-#load "Newtonsoft.Json.fs"
+#load "Newtonsoft.FsJson.fs"
 #load "abstract LiveParamProvider.fs"
 #load "_MtGox.fs"
 open andri.BtcClient
@@ -38,8 +40,9 @@ let clock interval =
     out.Publish
     
 let providers = new List<LiveTickerProvider>()
-let tickerEUR = MtGox.LiveTickerFactory (MtGox.PUBNUB_CHANNELS.ticker_BTCEUR, "BTCEUR")
-let tickerUSD = MtGox.LiveTickerFactory (MtGox.PUBNUB_CHANNELS.ticker_BTCUSD, "BTCUSD")
+let pubnub = new Pubnub("", MtGox.PUBNUB_KEY)
+let tickerEUR = MtGox.LiveTickerFactory (new MtGox.PubnubWrapper(pubnub), MtGox.PUBNUB_CHANNELS.ticker_BTCEUR, "BTCEUR")
+let tickerUSD = MtGox.LiveTickerFactory (new MtGox.PubnubWrapper(pubnub), MtGox.PUBNUB_CHANNELS.ticker_BTCUSD, "BTCUSD")
 providers.Add(tickerEUR)
 providers.Add(tickerUSD)
 let tickers = new LiveTickerCollection(providers)
@@ -65,28 +68,28 @@ MtGoxHttp.Quote (MtGoxHttp.QuoteType.Ask) (1.0) "BTC" "USD" |> Async.RunSynchron
 open andri.BtcClient
 // History
 let dataUSD =
-    BitcoinCharts.History1 "mtgoxUSD" (DateTime.UtcNow.Subtract(new TimeSpan(6,0,0)))
+    BitcoinCharts.HistorySample "mtgoxUSD" (DateTime.UtcNow.Subtract(new TimeSpan(6,0,0)))
     |> Async.RunSynchronously
     |> Seq.mapi (fun i r -> if i%15=0 then Some(r.Time,r.Price) else None) |> Seq.filter (Option.isSome) |> Seq.map (Option.get)
 let dataEUR =
-    BitcoinCharts.History1 "mtgoxEUR" (DateTime.UtcNow.Subtract(new TimeSpan(6,0,0)))
+    BitcoinCharts.HistorySample "mtgoxEUR" (DateTime.UtcNow.Subtract(new TimeSpan(6,0,0)))
     |> Async.RunSynchronously
     |> Seq.mapi (fun i r -> if i%15=0 then Some(r.Time,r.Price*1.36) else None) |> Seq.filter (Option.isSome) |> Seq.map (Option.get)
 Chart.Combine([FSharp.Charting.Chart.FastLine(dataUSD, Name="USD");FSharp.Charting.Chart.FastLine(dataEUR, Name="EUR")]).WithLegend().ShowChart()
 
 let dataUSD =
-    BitcoinCharts.HistoryMultiple "mtgoxUSD" (DateTime.UtcNow.Subtract(new TimeSpan(10,0,0))) (DateTime.UtcNow)
+    BitcoinCharts.HistoryFull "mtgoxUSD" (DateTime.UtcNow.Subtract(new TimeSpan(10,0,0))) (DateTime.UtcNow)
     |> Seq.mapi (fun i r -> if i%15=0 then Some(r.Time,r.Price) else None) |> Seq.filter (Option.isSome) |> Seq.map (Option.get)
 let dataEUR =
-    BitcoinCharts.HistoryMultiple "mtgoxEUR" (DateTime.UtcNow.Subtract(new TimeSpan(10,0,0))) (DateTime.UtcNow)
+    BitcoinCharts.HistoryFull "mtgoxEUR" (DateTime.UtcNow.Subtract(new TimeSpan(10,0,0))) (DateTime.UtcNow)
     |> Seq.mapi (fun i r -> if i%15=0 then Some(r.Time,r.Price*1.36) else None) |> Seq.filter (Option.isSome) |> Seq.map (Option.get)
 Chart.Combine([FSharp.Charting.Chart.FastLine(dataUSD, Name="USD");FSharp.Charting.Chart.FastLine(dataEUR, Name="EUR")]).WithLegend().ShowChart()
 
-let vol = MathFi.vol (mtgoxHistory |> Seq.map (fun e -> e.Price) |> Array.ofSeq )
+//let vol = MathFi.vol (mtgoxHistory |> Seq.map (fun e -> e.Price) |> Array.ofSeq )
 
 // AllMarkets Tickers
 open andri.BtcClient
-let allmarkets = BitcoinCharts.AllMarkets.Ticker() |> Newtonsoft.Json.Linq.JArray.Parse
+let allmarkets = BitcoinCharts.AllMarkets.Ticker()
 let highestbid_USD = BitcoinCharts.AllMarkets.Highest_bid "USD"
 jsonString highestbid_USD?symbol, jsonDouble highestbid_USD?bid
 let lowestAsk_USD = BitcoinCharts.AllMarkets.Lowest_ask "USD"

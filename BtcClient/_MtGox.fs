@@ -11,12 +11,12 @@
             let unixTimeStampInTicks = unixTimestamp * 10L
             new DateTime(unixYear0.Ticks + unixTimeStampInTicks)
 
-        let connectCallback_generic (o:obj System.Collections.Generic.List) =
+        let connectCallback_generic (o:System.Collections.Generic.IList<obj>) =
             let status = o |> Seq.nth 1 :?> string
             debugf "connectCallback: %s" (status)
         let disconnectCallback_generic o =
             debugf "disconnectCallback: %s" (o.ToString())
-        let errorCallback_generic o =
+        let errorCallback_generic (o:PubNubMessaging.Core.PubnubClientError) =
             errorf "errorCallback: %s" (o.ToString())
             
         let toRealValue currency (v:int) =
