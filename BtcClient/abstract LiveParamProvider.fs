@@ -3,9 +3,11 @@
     open Newtonsoft.FsJson
     open System.Collections.Generic
     
+    type Tick = {Now:DateTime; Last:float; Vwap:float}
+
     type Ticker = {
         Name:string
-        Last:seq<DateTime*float>
+        Last:seq<Tick>
         }
     [<AbstractClass>]
     type LiveTickerProvider(name:string) =

@@ -6,8 +6,8 @@
     open andri.Utilities
     open Newtonsoft.Json
     open Newtonsoft.FsJson
+    open andri.BtcClient.Data
     
-    type HistoryData = {Time:DateTime; Price:float; Amount:float}
     module BitcoinCharts =
         let private BASEURL = "http://api.bitcoincharts.com/v1/"
         let private BASEURI = new Uri(BASEURL)
@@ -19,9 +19,9 @@
         let toUnixTicks (d:DateTime) = (d.Ticks-unix0.Ticks)/10000000L
         let private csvSplitByRow = Strings.SplitByChar '\n'
         let private csvSplitByColumn = Strings.SplitByChar ','
-        let private csvParseHistoryRow =
+        let private csvParseHistoryRow market =
             function
-                | [|t;p;a|] -> { Time=parseUnixTicks t; Price=parseFloat p; Amount=parseFloat a }
+                | [|t;p;a|] -> new BitcoinChartHistory(Market=market, Now=parseUnixTicks t, Price=parseFloat p, Amount=parseFloat a)
                 | row -> failwithf "bad csv format: %i" (row.Length)
 
 
@@ -33,11 +33,11 @@
                 let! response = Web.getResponse uri
                 return response
                         |> csvSplitByRow
-                        |> Seq.map (csvSplitByColumn >> csvParseHistoryRow)
+                        |> Seq.map (csvSplitByColumn >> csvParseHistoryRow market)
                 }
-        let rec HistoryFull (market) (d1) (d2) : seq<HistoryData> =
+        let rec HistoryFull (market) (d1) (d2) : seq<BitcoinChartHistory> =
                 let data = HistorySample market d1 |> Async.RunSynchronously
-                let d1' = (Seq.last data).Time
+                let d1' = (Seq.last data).Now
                 if d1'=d1 then
                     data
                 else

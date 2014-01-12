@@ -2,6 +2,7 @@
 
 open andri.Utilities
 open andri.BtcClient
+open andri.BtcClient.Data
 open Xunit
 open FsUnit.Xunit
 open Newtonsoft.FsJson
@@ -10,7 +11,7 @@ open Newtonsoft.Json.Linq
 
 module BitcoinChartsTests =
 
-    let [<Fact>] ``History1 BTC USD``()=
+    let [<Fact>] ``HistorySample mtgoxEUR``()=
         ServiceLocator.forceSet "webrequest:/v1/trades.csv?symbol=mtgoxEUR&start=1385856000" (async {return """1389108337,705.778560000000,0.163000000000
 1389108337,700.100000000000,0.996081300000
 1389108364,709.529000000000,0.199099990000
@@ -23,8 +24,8 @@ module BitcoinChartsTests =
         let lastRow = List.nth dataEUR (dataEUR.Length-1)
 
         dataEUR.Length |> should equal 4
-        firstRow |> should equal { Time=DateTime(2014,1,7,15,25,37); Price=705.778560000000; Amount=0.163000000000}
-        lastRow |> should equal { Time=DateTime(2014,1,7,15,31,35); Price=700.040520000000; Amount=0.086214520000}
+        firstRow |> should equal (BitcoinChartHistory(Market="mtgoxEUR", Now=DateTime(2014,1,7,15,25,37), Price=705.778560000000, Amount=0.163000000000))
+        lastRow |> should equal (BitcoinChartHistory(Market="mtgoxEUR", Now=DateTime(2014,1,7,15,31,35), Price=700.040520000000, Amount=0.086214520000))
         
     let [<Fact>] ``BitcoinCharts_AllMarkets_Ticker``() =
         ServiceLocator.forceSet "webrequest:/v1/markets.json" (async {return """[

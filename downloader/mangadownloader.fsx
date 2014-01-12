@@ -1,10 +1,11 @@
 ﻿// Learn more about F# at http://fsharp.net
 
-#r @"bin\debug\HtmlAgilityPack.dll"
-#r @"bin\debug\Fizzler.dll"
-#r @"bin\debug\Fizzler.Systems.HtmlAgilityPack.dll"
-#r @"bin\debug\Fizzler.Systems.XmlNodeQuery.dll"
-#r @"bin\debug\andri.htmlagility.dll"
+#I @"D:\dev\htmlagilitypack-99964\Release\Fizzler.Systems.HtmlAgilityPack\bin\Debug"
+
+#r @"HtmlAgilityPack.dll"
+#r @"Fizzler.dll"
+#r @"Fizzler.Systems.HtmlAgilityPack.dll"
+#r @"D:\dev\playground\andri.htmlagility\bin\debug\andri.htmlagility.dll"
 
 #load @"andri.htmlagility.FsHelpers.fs"
 
@@ -99,7 +100,7 @@ let chapters =
 //     "Vol 08 Ch 081: Distrust","v08/c081";
 //     "Vol 08 Ch 082: Surrender","v08/c082";
 //     "Vol 08 Ch 083: Ambition","v08/c083";
-    "Vol 09 Ch 084: Game IV","v09/c084";
+//    "Vol 09 Ch 084: Game IV","v09/c084";
 //    "Vol 09 Ch 085: Pandemic Game","v09/c085";
 //    "Vol 09 Ch 086: Agree","v09/c086";
 //    "Vol 09 Ch 087: Virus Outbreak","v09/c087";
@@ -111,6 +112,7 @@ let chapters =
 //    "Vol 09 Ch 093: Differentiate","v09/c093";
 //    "Vol 09 Ch 094: Setup","v09/c094";
 //    "Vol 10 Ch 095: Overturn","v10/c095";
++++++++
 //    "Vol 10 Ch 096: Intent","v10/c096";
 //    "Vol 10 Ch 097: Trust","v10/c097";
 //    "Vol 10 Ch 098: Selflessness","v10/c098";
@@ -132,28 +134,28 @@ let chapters =
 //    "Vol 11 Ch 114: Surprise Attack","v11/c114";
 //    "Vol 11 Ch 115: Abstaining","v11/c115";
 //    "Vol 11 Ch 116: Cause","v11/c116";
-//    "Vol 12 Ch 117: Breach","v12/c117";
-//    "Vol 12 Ch 118: Ambush","v12/c118";
-//    "Vol 12 Ch 119: Alliance","v12/c119";
-//    "Vol 12 Ch 120: Puppeteer","v12/c120";
-//    "Vol 12 Ch 121: Dummy","v12/c121";
-//    "Vol 12 Ch 122: Logical Reasoning","v12/c122";
-//    "Vol 12 Ch 123: Turn Around","v12/c123";
-//    "Vol 12 Ch 124: Chance","v12/c124";
-//    "Vol 12 Ch 125: Demons","v12/c125";
-//    "Vol 12 Ch 126: Heartless","v12/c126";
-//    "Vol 12 Ch 127: Betrayal","v12/c127";
-//    "Vol 13 Ch 128: Prediction","v13/c128";
-//    "Vol 13 Ch 129: Rift","v13/c129";
-//    "Vol 13 Ch 130: Negotiations","v13/c130";
-//    "Vol 13 Ch 131: Make &amp; Break","v13/c131";
-//    "Vol 13 Ch 132: Trickster","v13/c132";
-//    "Vol 13 Ch 133: Under Control","v13/c133";
-//    "Vol 13 Ch 134: Counterattack","v13/c134";
-//    "Vol 13 Ch 135: Shorn","v13/c135";
-//    "Vol 13 Ch 136: Overwhelming","v13/c136";
-//    "Vol 13 Ch 137: Unity","v13/c137";
-//    "Vol 13 Ch 138: Conclusion","v13/c138";
+    "Vol 12 Ch 117: Breach","v12/c117";
+    "Vol 12 Ch 118: Ambush","v12/c118";
+    "Vol 12 Ch 119: Alliance","v12/c119";
+    "Vol 12 Ch 120: Puppeteer","v12/c120";
+    "Vol 12 Ch 121: Dummy","v12/c121";
+    "Vol 12 Ch 122: Logical Reasoning","v12/c122";
+    "Vol 12 Ch 123: Turn Around","v12/c123";
+    "Vol 12 Ch 124: Chance","v12/c124";
+    "Vol 12 Ch 125: Demons","v12/c125";
+    "Vol 12 Ch 126: Heartless","v12/c126";
+    "Vol 12 Ch 127: Betrayal","v12/c127";
+    "Vol 13 Ch 128: Prediction","v13/c128";
+    "Vol 13 Ch 129: Rift","v13/c129";
+    "Vol 13 Ch 130: Negotiations","v13/c130";
+    "Vol 13 Ch 131: Make &amp; Break","v13/c131";
+    "Vol 13 Ch 132: Trickster","v13/c132";
+    "Vol 13 Ch 133: Under Control","v13/c133";
+    "Vol 13 Ch 134: Counterattack","v13/c134";
+    "Vol 13 Ch 135: Shorn","v13/c135";
+    "Vol 13 Ch 136: Overwhelming","v13/c136";
+    "Vol 13 Ch 137: Unity","v13/c137";
+    "Vol 13 Ch 138: Conclusion","v13/c138";
 //    "Vol 14 Ch 139: Resolve","v14/c139";
 //    "Vol 14 Ch 140: Twist","v14/c140";
 //    "Vol 14 Ch 141: Bid Poker","v14/c141";
@@ -184,11 +186,11 @@ let chapters =
 
 let rec downloadImage nbTries baseFolder url = 
     try
-        let image_url = getPageContent url |> toHtmlDocument |> querySelector "#image" |> selectAttributeValue "src"
+        let image_url = getPageContent_noEnconding url |> Async.RunSynchronously |> toHtmlNode |> querySelector "#image" |> getAttributeValue "src"
         printfn "downloading %s" image_url
         let remote_filename = Path.GetFileName((new Uri(image_url)).LocalPath)
-        let filename = String.Format("Downloads/{0}/{1}", baseFolder, remote_filename)
-        writePageContent filename image_url
+        let filename = String.Format("{0}/{1}", baseFolder, remote_filename)
+        writePageContent filename image_url |> Async.RunSynchronously
     with
     | ex ->
             System.Threading.Thread.Sleep 500
@@ -199,15 +201,16 @@ let rec downloadImage nbTries baseFolder url =
 let downloadChapters (chapters:(string * string) list) = 
     for title,url_part in chapters do
         let comments_url = String.Format("http://mangafox.me/manga/liar_game/{0}/", url_part)
-        let pages = comments_url |> getPageContent |> toHtmlDocument |> querySelectorAll ".page select.m option" |> List.ofSeq
-        let n = Int32.Parse(pages.[pages.Length-2] |> selectAttributeValue "value")
+        let pages = comments_url |> getPageContent_noEnconding |> Async.RunSynchronously |> toHtmlNode |> querySelectorAll ".page select.m option" |> List.ofSeq
+        let n = Int32.Parse(pages.[pages.Length-2] |> getAttributeValue "value")
         
-        Directory.CreateDirectory(String.Format("Downloads/{0}", url_part)) |> ignore
+        Directory.CreateDirectory(String.Format("{0}", url_part)) |> ignore
 
         for i in 1..n do
             let url = String.Format("http://mangafox.me/manga/liar_game/{0}/{1}.html", url_part, i)
             downloadImage 0 url_part url
 
 
+System.Environment.CurrentDirectory <- @"D:\dev\playground\downloader\Downloads"
 downloadChapters chapters
 

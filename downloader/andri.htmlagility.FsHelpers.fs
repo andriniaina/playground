@@ -6,6 +6,7 @@ module FsHelpers =
     open System
     open System.IO
     open System.Net
+    open System.Linq
     //open andri.htmlagility
     open Fizzler.Systems.HtmlAgilityPack
 
@@ -28,15 +29,24 @@ module FsHelpers =
             responseStream.CopyTo(filestream)
             }
 #endif
-    let getPageContent uri =
+    let getPageContent url =
         async {
-            let request = createWebRequest uri
+            let request = createWebRequest url
             use! response = request.AsyncGetResponse()
             let contentType_dic = response.ContentType.Split(';') |> Array.map (fun v -> v.Split([|'='|])) |> Array.map (fun a -> (a.[0].Trim(), if a.Length>1 then a.[1].Trim() else null)) |> dict// |> Array.find (fun v -> "charset"=(fst v))
             let encoding = System.Text.Encoding.GetEncoding(contentType_dic.["charset"])
             use stream = response.GetResponseStream()
             use reader = new System.IO.StreamReader(stream, encoding)
             return reader.ReadToEnd()// |> WebUtility.HtmlDecode
+        }
+
+    let getPageContent_noEnconding url =
+        async {
+            let request = createWebRequest url
+            use! response = request.AsyncGetResponse()
+            use stream = response.GetResponseStream()
+            use reader = new System.IO.StreamReader(stream)
+            return reader.ReadToEnd()
         }
 
     let toHtmlDocument content =

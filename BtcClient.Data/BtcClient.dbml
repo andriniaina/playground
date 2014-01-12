@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<Database xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Name="main" Class="Main" BaseType="DbLinq.Data.Linq.DataContext" Provider="Sqlite" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Table Name="main.BitcoinChartHistory" Member="BitcoinChartHistory">
+    <Type Name="BitcoinChartHistory">
+      <Column Name="Amount" Member="Amount" Storage="_amount" Type="System.Double" DbType="double" IsPrimaryKey="false" IsDbGenerated="false" CanBeNull="false" />
+      <Column Name="id" Member="ID" Storage="_id" Type="System.Int32" DbType="INTEGER" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="true" />
+      <Column Name="Market" Member="Market" Storage="_market" Type="System.String" DbType="text" IsPrimaryKey="false" IsDbGenerated="false" CanBeNull="false" />
+      <Column Name="Now" Member="Now" Storage="_now" Type="System.DateTime" DbType="datetime" IsPrimaryKey="false" IsDbGenerated="false" CanBeNull="false" />
+      <Column Name="Price" Member="Price" Storage="_price" Type="System.Double" DbType="double" IsPrimaryKey="false" IsDbGenerated="false" CanBeNull="false" />
+    </Type>
+  </Table>
+</Database>

@@ -5,20 +5,40 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BtcClient", "BtcClient.fspr
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "BtcClientTests", "..\BtcClientTests\BtcClientTests.fsproj", "{92A2EB15-3434-44CC-85BA-82DC32A20D92}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BtcClient.Data", "..\BtcClient.Data\BtcClient.Data.csproj", "{4BDB2951-7C12-4B01-89DF-197C81AED969}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
 		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{455409C0-C359-4FEF-907E-3ECA7EC3ABE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{455409C0-C359-4FEF-907E-3ECA7EC3ABE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{455409C0-C359-4FEF-907E-3ECA7EC3ABE3}.Debug|x86.ActiveCfg = Debug|x86
+		{455409C0-C359-4FEF-907E-3ECA7EC3ABE3}.Debug|x86.Build.0 = Debug|x86
 		{455409C0-C359-4FEF-907E-3ECA7EC3ABE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{455409C0-C359-4FEF-907E-3ECA7EC3ABE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{455409C0-C359-4FEF-907E-3ECA7EC3ABE3}.Release|x86.ActiveCfg = Release|x86
+		{455409C0-C359-4FEF-907E-3ECA7EC3ABE3}.Release|x86.Build.0 = Release|x86
 		{92A2EB15-3434-44CC-85BA-82DC32A20D92}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{92A2EB15-3434-44CC-85BA-82DC32A20D92}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92A2EB15-3434-44CC-85BA-82DC32A20D92}.Debug|x86.ActiveCfg = Debug|x86
+		{92A2EB15-3434-44CC-85BA-82DC32A20D92}.Debug|x86.Build.0 = Debug|x86
 		{92A2EB15-3434-44CC-85BA-82DC32A20D92}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92A2EB15-3434-44CC-85BA-82DC32A20D92}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92A2EB15-3434-44CC-85BA-82DC32A20D92}.Release|x86.ActiveCfg = Release|x86
+		{92A2EB15-3434-44CC-85BA-82DC32A20D92}.Release|x86.Build.0 = Release|x86
+		{4BDB2951-7C12-4B01-89DF-197C81AED969}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BDB2951-7C12-4B01-89DF-197C81AED969}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BDB2951-7C12-4B01-89DF-197C81AED969}.Debug|x86.ActiveCfg = Debug|x86
+		{4BDB2951-7C12-4B01-89DF-197C81AED969}.Debug|x86.Build.0 = Debug|x86
+		{4BDB2951-7C12-4B01-89DF-197C81AED969}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BDB2951-7C12-4B01-89DF-197C81AED969}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BDB2951-7C12-4B01-89DF-197C81AED969}.Release|x86.ActiveCfg = Release|x86
+		{4BDB2951-7C12-4B01-89DF-197C81AED969}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
