@@ -27,6 +27,8 @@
                         | _ -> failwith "Erreur de communication"
             }
 
+        let QuoteTask qType (famount:float) currency1 currency2 = Quote qType famount currency1 currency2 |> Async.StartAsTask
+
         /// exemples: jsonString ticker?now / jsonInt ticker?last?value_int
         let TickerFast currency1 currency2 =
             async {
@@ -40,5 +42,10 @@
                         //| "success" -> jsonInt response?data?last?value_int |> toRealValue currency2
                         | _ -> failwith "Erreur de communication"
             }
+        let QuoteLastTask currency1 currency2 =
+            async {
+                let! ticker = TickerFast currency1 currency2 
+                return jsonDouble ticker?last?value
+            } |> Async.StartAsTask
 
 

@@ -24,6 +24,8 @@
                 | [|t;p;a|] -> new BitcoinChartHistory(Market=market, Now=parseUnixTicks t, Price=parseFloat p, Amount=parseFloat a)
                 | row -> failwithf "bad csv format: %i" (row.Length)
 
+        let AsTimeSeries (data:BitcoinChartHistory seq) =
+            data |> Seq.map (fun o -> o.Now,o.Price)
 
         /// mtgoxUSD
         let HistorySample (market) (start) =
@@ -34,7 +36,11 @@
                 return response
                         |> csvSplitByRow
                         |> Seq.map (csvSplitByColumn >> csvParseHistoryRow market)
+                        |> Seq.sortBy (fun o -> o.Now)
                 }
+        let HistorySampleTask (market) (start) =
+            HistorySample (market) (start) |> Async.StartAsTask
+
         let rec HistoryFull (market) (d1) (d2) : seq<BitcoinChartHistory> =
                 let data = HistorySample market d1 |> Async.RunSynchronously
                 let d1' = (Seq.last data).Now

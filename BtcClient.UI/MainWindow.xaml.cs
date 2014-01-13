@@ -12,7 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-
+using andri.BtcClient;
 namespace BtcClient.UI
 {
     /// <summary>
@@ -20,9 +20,23 @@ namespace BtcClient.UI
     /// </summary>
     public partial class MainWindow : Window
     {
+        MainWindowVM _datacontext = new MainWindowVM();
+        System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         public MainWindow()
         {
+            this.DataContext = _datacontext;
+
             InitializeComponent();
+
+            dispatcherTimer_Tick(null, null);
+            dispatcherTimer.Tick += dispatcherTimer_Tick;
+            dispatcherTimer.Interval = new TimeSpan(0, 0, 30);
+            dispatcherTimer.Start();
+        }
+
+        void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            _datacontext.RefreshCommand.Execute(null);
         }
     }
 }

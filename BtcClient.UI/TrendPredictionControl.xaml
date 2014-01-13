@@ -1,0 +1,20 @@
+﻿<UserControl x:Class="BtcClient.UI.TrendPredictionControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             xmlns:local="clr-namespace:BtcClient.UI"
+             d:DesignHeight="40" d:DesignWidth="300">
+    <UserControl.DataContext>
+        <local:TrendPredictionControlVM></local:TrendPredictionControlVM>
+    </UserControl.DataContext>
+        
+    <StackPanel Orientation="Horizontal">
+        <TextBlock Margin="0,10">x</TextBlock>
+        <TextBlock x:Name="tbxDegree" Margin="0,10,10,10" Text="{Binding Path=Degree}"></TextBlock>
+        <TextBlock Margin="0,10">min</TextBlock>
+        <TextBlock x:Name="tbxDirection" Margin="10" Text="{Binding Path=Advice}"></TextBlock>
+        <Button Content="Graph" Command="{Binding ShowGraph}"></Button>
+    </StackPanel>
+</UserControl>

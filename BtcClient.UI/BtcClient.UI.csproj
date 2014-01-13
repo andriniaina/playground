@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>c10ada3a-9bda-4fda-a606-dd82948a485e</ProjectGuid>
+    <ProjectGuid>{2B405101-8EC8-4F9B-87FC-8AFB21238683}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BtcClient.UI</RootNamespace>
@@ -34,6 +34,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FSharp.Charting, Version=0.90.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\BtcClient\packages\FSharp.Charting.0.90.5\lib\net40\FSharp.Charting.dll</HintPath>
+    </Reference>
+    <Reference Include="FSharp.Core, Version=4.3.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -51,7 +56,19 @@
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="BaseVM.cs" />
+    <Compile Include="BaseCommand.cs" />
+    <Compile Include="MainWindowVM.cs" />
+    <Compile Include="Ticker.xaml.cs">
+      <DependentUpon>Ticker.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TickerVM.cs" />
+    <Compile Include="TrendPredictionControl.xaml.cs">
+      <DependentUpon>TrendPredictionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="TrendPredictionControlVM.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -64,6 +81,14 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Ticker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="TrendPredictionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -83,6 +108,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -91,6 +117,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BtcClient.Data\BtcClient.Data.csproj">
+      <Project>{4bdb2951-7c12-4b01-89df-197c81aed969}</Project>
+      <Name>BtcClient.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\BtcClient\BtcClient.fsproj">
+      <Project>{455409c0-c359-4fef-907e-3eca7ec3abe3}</Project>
+      <Name>BtcClient</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

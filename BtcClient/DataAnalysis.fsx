@@ -38,7 +38,7 @@ open andri.BtcClient
 #r "MathNet.Numerics.IO"
 #r "MathNet.Numerics.Fsharp"
 
-#load "NeuralNetworks.fs"
+#load "DataAnalysis.fs"
 
 open System
 open PubNubMessaging.Core
@@ -54,14 +54,14 @@ open andri.BtcClient.Data
 
 
 let marketName ="mtgoxUSD"
-let startTime= new TimeSpan(13,0,0) |> DateTime.UtcNow.Subtract
+let startTime= new TimeSpan(3,0,0) |> DateTime.UtcNow.Subtract
 let data =
     BitcoinCharts.HistorySample marketName startTime
     |> Async.RunSynchronously
 let coords = data |> Seq.map(fun d -> d.Now, d.Price)
 let xdata = coords |> Seq.map fst |> Seq.map (fun d -> d.Ticks) |> Seq.map float
 let ydata = coords |> Seq.map snd
-let coeffs = NeuralNetworks.RegressionCoefficients 5 xdata ydata
+let coeffs = DataAnalysis.RegressionCoefficients 5 xdata ydata
 
 let min = coords |> Seq.map snd |> Seq.min
 let xL = xdata |> Seq.head |> int64
@@ -69,7 +69,7 @@ let xR = xdata |> Seq.last |> int64
 let coords' = [
     for x in xL..5000000000L..xR ->
     let d = DateTime(x)
-    d,NeuralNetworks.ValueAt (float x) coeffs
+    d,DataAnalysis.ValueAt coeffs (float x)
     ]
 
 Chart.Combine([
@@ -78,39 +78,46 @@ Chart.Combine([
      .WithLegend().WithYAxis(Min=min)
      .ShowChart()
 
-NeuralNetworks.PredictTrend 5 coords
-NeuralNetworks.Slope30perMin coords
-NeuralNetworks.Slope60perMin coords
-let coeffs' = NeuralNetworks.Derive coeffs
-coeffs |> NeuralNetworks.ValueAt (DateTime(2014,1,11,22,45,0).Ticks |> float)
-coeffs' |> NeuralNetworks.ValueAt (DateTime(2014,1,11,22,00,0).Ticks |> float)
+DataAnalysis.PredictTrend 5 5 coords
+DataAnalysis.Slope30perMin coords
+DataAnalysis.Slope60perMin coords
+let coeffs' = DataAnalysis.Derive coeffs
+DataAnalysis.ValueAt coeffs (DateTime(2014,1,11,22,45,0).Ticks |> float)
+DataAnalysis.ValueAt coeffs' (DateTime(2014,1,11,22,00,0).Ticks |> float)
 
 
 
-let Prout N (data:(DateTime*float) seq) =
+    
+
+let Prout N degree (data:(DateTime*float) seq) =
 
     let FACTOR = (float N)*60000000.0
-    let _data = data |> Seq.sortBy fst
+    let _data = data// |> Seq.sortBy fst
     let xStart = (fst(Seq.head _data)).Ticks
     let xdata = _data |> Seq.map (fun d -> float ((fst d).Ticks-xStart)/FACTOR)
     let ydata = _data |> Seq.map (fun d -> snd d)
 
-    let coeffs = NeuralNetworks.RegressionCoefficients 9 xdata ydata
+    let coeffs = DataAnalysis.RegressionCoefficients degree xdata ydata
     let xL,xR=Seq.head xdata,Seq.last xdata
     let coords = [
         for x in xL..xR ->
-        x,NeuralNetworks.ValueAt (float x) coeffs
+        x,DataAnalysis.ValueAt coeffs (float x)
     ]
     
     let min = ydata |> Seq.min
-    let coeffs' = coeffs |> NeuralNetworks.Derive 
+    let coeffs' = coeffs |> DataAnalysis.Derive 
     let coords' = [
         for x in xL..xR ->
-        x,NeuralNetworks.ValueAt (float x) coeffs'
+        x,DataAnalysis.ValueAt coeffs' (float x)
     ]
     
-    //FSharp.Charting.Chart.FastLine(data |> Seq.map (fun d -> float ((fst d).Ticks-xStart)/FACTOR,snd d)).WithYAxis(Min=min).ShowChart()
-    FSharp.Charting.Chart.FastLine(coords).WithYAxis(Min=min).ShowChart()
+    Chart.Combine([
+                        FSharp.Charting.Chart.Line(data).WithYAxis(Min=min);
+                        FSharp.Charting.Chart.Line(coords |> Seq.map (fun (d,p) -> DateTime(int64(d*FACTOR)+ xStart) ,p)).WithYAxis(Min=min)
+        ])
+        .WithLegend().WithYAxis(Min=min)
+        .ShowChart()
     //FSharp.Charting.Chart.FastLine(coords).WithYAxis(Min=min).ShowChart()
 
-Prout 30 coords
+Prout 30 9 coords
+DataAnalysis.PredictTrend 5 5 coords
