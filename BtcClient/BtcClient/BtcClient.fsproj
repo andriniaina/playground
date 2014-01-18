@@ -54,20 +54,20 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\pubnub-c-sharp\csharp.net\3.5\PubNub-Messaging\bin\Debug\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\..\..\pubnub-c-sharp\csharp.net\3.5\PubNub-Messaging\bin\Debug\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="PubNubMessaging.Core">
-      <HintPath>..\..\pubnub-c-sharp\csharp.net\3.5\PubNub-Messaging\bin\Debug\PubNubMessaging.Core.exe</HintPath>
+      <HintPath>..\..\..\pubnub-c-sharp\csharp.net\3.5\PubNub-Messaging\bin\Debug\PubNubMessaging.Core.exe</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.Linq" />
     <Reference Include="System.Data.SQLite">
-      <HintPath>..\..\DbLinq-0.20.1\System.Data.SQLite.dll</HintPath>
+      <HintPath>..\..\..\DbLinq-0.20.1\System.Data.SQLite.dll</HintPath>
     </Reference>
     <Reference Include="System.Data.SQLite.Linq">
-      <HintPath>..\..\DbLinq-0.20.1\System.Data.SQLite.Linq.dll</HintPath>
+      <HintPath>..\..\..\DbLinq-0.20.1\System.Data.SQLite.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
@@ -92,19 +92,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Compile Include="..\andri.FsUtilities\Strings.fs">
+    <Compile Include="..\..\andri.FsUtilities\Strings.fs">
       <Link>Strings.fs</Link>
     </Compile>
-    <Compile Include="..\andri.FsUtilities\ServiceLocator.fs">
+    <Compile Include="..\..\andri.FsUtilities\ServiceLocator.fs">
       <Link>ServiceLocator.fs</Link>
     </Compile>
-    <Compile Include="..\andri.FsUtilities\Queue.fs">
+    <Compile Include="..\..\andri.FsUtilities\Queue.fs">
       <Link>Queue.fs</Link>
     </Compile>
-    <Compile Include="..\andri.FsUtilities\Web.fs">
+    <Compile Include="..\..\andri.FsUtilities\Web.fs">
       <Link>Web.fs</Link>
     </Compile>
-    <Compile Include="..\andri.FsUtilities\Finance.fs">
+    <Compile Include="..\..\andri.FsUtilities\Finance.fs">
       <Link>Finance.fs</Link>
     </Compile>
     <Compile Include="Log.fs" />

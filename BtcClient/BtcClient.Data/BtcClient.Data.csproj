@@ -48,12 +48,6 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DbLinq">
-      <HintPath>..\..\DbLinq-0.20.1\DbLinq.dll</HintPath>
-    </Reference>
-    <Reference Include="DbLinq.Sqlite">
-      <HintPath>..\..\DbLinq-0.20.1\DbLinq.Sqlite.dll</HintPath>
-    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\BtcClient\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
