@@ -72,11 +72,12 @@ module DataAnalysis =
         let coeffs' = coeffs |> Derive
         let coeffs'' = coeffs' |> Derive
 
-        let i = (Seq.length xdata)*98/100
-        let xi = Seq.nth i xdata
+        //let i = (Seq.length xdata)*98/100
+        //let xi = Seq.nth i xdata
+        let xi = (Seq.last xdata)*95.0/100.0
         let derivee1 = ValueAt coeffs' xi
-        let derivee2 = ValueAt coeffs' xi
-        if (derivee2 > 0.0) then Buy(derivee1) else Sell(derivee2)
+        let derivee2 = ValueAt coeffs'' xi
+        if (derivee1 > 0.0) then Buy(derivee2) else Sell(derivee2)
 
 
     /// variation attendue par minute, sur une vision de 30min

@@ -102,7 +102,7 @@ let showHistory marketName (startTime:DateTime) endTime =
     let min = coords |> Seq.map snd |> Seq.min
     FSharp.Charting.Chart.Line(coords, Name=marketName).WithYAxis(Min=min).WithLegend().ShowChart()
 
-showHistory "mtgoxUSD" (DateTime.UtcNow.Subtract(TimeSpan(24,0,0))) (DateTime.UtcNow)
+showHistory "mtgoxUSD" (DateTime.UtcNow.Subtract(TimeSpan(6,0,0))) (DateTime.UtcNow)
 showHistory "mtgoxEUR" (DateTime.UtcNow.Subtract(TimeSpan(24,0,0))) (DateTime.UtcNow)
 
 
