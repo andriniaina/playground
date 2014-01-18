@@ -1,4 +1,4 @@
-﻿#I @"packages\FSharp.Charting.0.90.5\lib\net40"
+﻿#I @"..\packages\FSharp.Charting.0.90.5\lib\net40"
 #I @"D:\dev\pubnub-c-sharp\csharp.net\3.5\PubNub-Messaging\bin\Debug"
 #I @"c:\dev\pubnub-c-sharp\csharp.net\3.5\PubNub-Messaging\bin\Debug"
 
@@ -40,7 +40,6 @@ open andri.BtcClient
 open Newtonsoft.FsJson
 open FSharp.Charting
 open System.Collections.Generic
-open DbLinq
 open System.Linq
 open andri.BtcClient
 open andri.BtcClient.Data
@@ -48,12 +47,9 @@ open andri.BtcClient.Data
 let byMinute (d:DateTime) = DateTime((d.Ticks/60000000L)*60000000L)
 let byHour (d:DateTime) = DateTime((d.Ticks/36000000000L)*36000000000L)
 let by30min (d:DateTime) = DateTime((d.Ticks/18000000000L)*18000000000L)
-let DATABASEPATH = @"D:\dev\playground\BtcClient.Data\BtcClient.db3"
-let connection() =
-    new System.Data.SQLite.SQLiteConnection(@"Data Source=D:\dev\playground\BtcClient.Data\BtcClient.db3")
+let DATABASEPATH = @"C:\dev\playground\BtcClient\BtcClient.Data\BtcClient.db3"
 
 let updateMarketHistory (marketName:string) =
-    use conn = connection()
     use ctx = new SQLite.SQLiteConnection(DATABASEPATH,false)
     let startTime =
         ctx.Query<BitcoinChartHistory>("select * from BitcoinChartHistory where Market=? and Now in (select max(Now) from BitcoinChartHistory where Market=?);", marketName, marketName)
@@ -65,14 +61,9 @@ let updateMarketHistory (marketName:string) =
         
     let endTime = (Seq.last data).Now |> by30min
     // delete from BitcoinChartHistory
-    use command = new System.Data.SQLite.SQLiteCommand(@"delete from BitcoinChartHistory where Market=@market and Now>=@start and Now<=@end", conn)
-    command.Parameters.AddWithValue("@market", marketName) |> ignore
-    command.Parameters.AddWithValue("@start", startTime) |> ignore
-    command.Parameters.AddWithValue("@end", endTime) |> ignore
-    conn.Open()
-    (command.ExecuteNonQuery(),startTime.ToString()) ||> printfn "%i lines deleted starting from %s"
-    command.Dispose()
-    conn.Close()
+    
+    let nbRows = ctx.Execute(@"delete from BitcoinChartHistory where Market=@market and Now>=@start and Now<=@end", marketName, startTime, endTime)
+    (nbRows,startTime.ToString()) ||> printfn "%i lines deleted starting from %s"
 
     data
     |> Seq.filter (fun o -> o.Now>startTime)
@@ -102,7 +93,7 @@ let showHistory marketName (startTime:DateTime) endTime =
     let min = coords |> Seq.map snd |> Seq.min
     FSharp.Charting.Chart.Line(coords, Name=marketName).WithYAxis(Min=min).WithLegend().ShowChart()
 
-showHistory "mtgoxUSD" (DateTime.UtcNow.Subtract(TimeSpan(6,0,0))) (DateTime.UtcNow)
+showHistory "mtgoxUSD" (DateTime.UtcNow.Subtract(TimeSpan(24,0,0))) (DateTime.UtcNow)
 showHistory "mtgoxEUR" (DateTime.UtcNow.Subtract(TimeSpan(24,0,0))) (DateTime.UtcNow)
 
 

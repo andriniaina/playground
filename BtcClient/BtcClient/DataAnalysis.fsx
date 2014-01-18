@@ -1,20 +1,20 @@
-﻿#I @"packages\FSharp.Charting.0.90.5\lib\net40"
+﻿#I @"..\packages\FSharp.Charting.0.90.5\lib\net40"
 #I @"D:\dev\pubnub-c-sharp\csharp.net\3.5\PubNub-Messaging\bin\Debug"
 #I @"c:\dev\pubnub-c-sharp\csharp.net\3.5\PubNub-Messaging\bin\Debug"
-#I @"packages\MathNet.Numerics.2.6.2\lib\net40"
-#I @"packages\MathNet.Numerics.FSharp.2.6.0\lib\net40"
+#I @"..\packages\MathNet.Numerics.2.6.2\lib\net40"
+#I @"..\packages\MathNet.Numerics.FSharp.2.6.0\lib\net40"
 
 #r @"PubNubMessaging.Core"
 #r @"Newtonsoft.Json"
 #r @"Fsharp.Charting"
 #r @"System.Windows.Forms"
 #r @"System.Windows.Forms.DataVisualization"
-#load "../andri.FsUtilities/Finance.fs"
-#load "../andri.FsUtilities/ServiceLocator.fs"
+#load "../../andri.FsUtilities/Finance.fs"
+#load "../../andri.FsUtilities/ServiceLocator.fs"
 open andri.Utilities
-#load "../andri.FsUtilities/Web.fs"
-#load "../andri.FsUtilities/Queue.fs"
-#load "../andri.FsUtilities/Strings.fs"
+#load "../../andri.FsUtilities/Web.fs"
+#load "../../andri.FsUtilities/Queue.fs"
+#load "../../andri.FsUtilities/Strings.fs"
 #load "Log.fs"
 #load "Newtonsoft.FsJson.fs"
 #load "abstract LiveParamProvider.fs"
@@ -29,9 +29,7 @@ open andri.BtcClient
 #r "BtcClient.Data"
 #r "System.Data"
 #r "System.Transactions"
-#r "System.Data.Sqlite"
 #r "System.Data.Linq"
-#r "DbLinq"
 #load "BitcoinCharts.fs"
 
 #r "MathNet.Numerics.dll"
@@ -47,7 +45,6 @@ open andri.BtcClient
 open Newtonsoft.FsJson
 open FSharp.Charting
 open System.Collections.Generic
-open DbLinq
 open System.Linq
 open andri.BtcClient
 open andri.BtcClient.Data
