@@ -30,7 +30,7 @@ namespace BtcClient.UI
 
             dispatcherTimer_Tick(null, null);
             dispatcherTimer.Tick += dispatcherTimer_Tick;
-            dispatcherTimer.Interval = new TimeSpan(0, 5, 0);
+            dispatcherTimer.Interval = new TimeSpan(0, 15, 0);
             dispatcherTimer.Start();
         }
 

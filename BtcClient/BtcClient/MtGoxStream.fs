@@ -24,9 +24,9 @@
         type MtGoxLiveTickerProvider(name:string, historyMaxCount:int) =
             inherit andri.BtcClient.LiveTickerProvider(name)
             let tickerUpdated = new Event<Ticker>()
-            let data = new andri.Utilities.EnumerableQueue<Tick>(historyMaxCount)
+            let data = new andri.Utilities.CyclicObservableQueue<Tick>(historyMaxCount)
             let dvSort (d:DateTime,v:double) = d.Ticks
-            member x.History:seq<Tick> = data |> Seq.sortBy (fun d -> d.Now)
+            member x.History:seq<Tick> = data.InternalList |> Seq.sortBy (fun d -> d.Now)
             member x.PushResponse (response:Newtonsoft.Json.Linq.JObject) =
                 debugf "Decoding MtGox ticker response"
                 let channel = jsonString response?channel
@@ -44,16 +44,11 @@
                 let buy = jsonDouble ticker?buy?value
                 let sell = jsonDouble ticker?sell?value
 
-                if data.Count>historyMaxCount then data.Dequeue() |> ignore
                 data.Enqueue {Now=now; Last=last; Vwap=vwap}
 
                 debugf "(%s) currency_spread = last-last_all = %f-%f = %f" name last last_all (last-last_all)
 
                 tickerUpdated.Trigger({Name=name; Last= x.History})
-(*
-            member x.subscribeCallback(o:obj) =
-                printfn "%s" (o.ToString())
-*)
             member x.subscribeCallback(o:IList<obj>) =
                 let response = o |> Seq.head :?> Newtonsoft.Json.Linq.JObject
                 x.PushResponse(response)
@@ -67,7 +62,7 @@
                 responses |> Seq.cast<Newtonsoft.Json.Linq.JObject> |> Seq.iter provider.PushResponse
                 
             // en background, commencer par télécharger l'historique
-//            pubnub.DetailedHistory  channel   MAXCOUNT   (historyCallback ticker)   (errorCallback_generic)  |> ignore
+            pubnub.DetailedHistory  channel   MAXCOUNT   (historyCallback ticker)   (errorCallback_generic)  |> ignore
             // s'enregistrer pour le stream
             pubnub.Subscribe  channel  (ticker.subscribeCallback)  connectCallback_obj  errorCallback_generic 
             ticker
