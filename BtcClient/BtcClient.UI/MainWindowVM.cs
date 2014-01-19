@@ -5,11 +5,30 @@ using System.Text;
 using System.Threading.Tasks;
 using andri.BtcClient;
 
+using System.Reactive;
+using System.Reactive.Linq;
+using System.Threading;
+
 namespace BtcClient.UI
 {
     public class MainWindowVM : BaseVM 
     {
-        public MainWindowVM()
+    //    public class TickObserver : IObserver<IList<Tick>>
+    //    {
+    //        public void OnCompleted()
+    //        {
+    //        }
+
+    //        public void OnError(Exception error)
+    //        {
+    //            throw new NotImplementedException();
+    //        }
+
+    //        public void OnNext(IList<Tick> value)
+    //        {
+    //        }
+    //    }
+        public MainWindowVM(MtGoxStream.MtGoxLiveTickerProvider liveProvider)
         {
             this.BidVM = new TickerVM() { Label = "Bid (vente)", Price = 0.0 };
             this.AskVM = new TickerVM() { Label = "Ask (achat)", Price = 0.0 };
@@ -18,28 +37,30 @@ namespace BtcClient.UI
             this.Predict5deg = new TrendPredictionControlVM(5, 15);
             this.Predict6deg = new TrendPredictionControlVM(6, 15);
             this.Predict7deg = new TrendPredictionControlVM(7, 15);
-            this.RefreshCommand = new BaseCommand();
-            this.RefreshCommand.OnExecute += RefreshCommand_OnExecute;
+
+            liveProvider.Data.Subscribe(list => this.BidVM.Price = list.Last().Bid);
+            liveProvider.Data.Subscribe(list => this.AskVM.Price = list.Last().Ask);
+            liveProvider.Data.Subscribe(list => this.LastVM.Price = list.Last().Last);
+            Thread.Sleep(10000);
+            liveProvider.Data.Subscribe(list =>
+            {
+                if (list.Count >= 200)
+                {
+                    var lastValues = (from o in list select Tuple.Create(o.Now, o.Last)).ToList();
+                    //var bids = (from o in list where o.Bid > 0 select Tuple.Create(o.Now, o.Bid)).ToList();
+                    //if (bids.Count > 50)
+                    {
+                        this.Predict3deg.RefreshProperties(lastValues);
+                        this.Predict5deg.RefreshProperties(lastValues);
+                        this.Predict6deg.RefreshProperties(lastValues);
+                        this.Predict7deg.RefreshProperties(lastValues);
+                    }
+                }
+            });
         }
 
-        void RefreshCommand_OnExecute(object sender, EventArgs e)
+        public void StartSubscribe()
         {
-            refresh();
-        }
-
-        private async void refresh()
-        {
-            this.BidVM.Price = await MtGoxHttp.QuoteTask(MtGoxHttp.QuoteType.Bid, 1.0, "BTC", "USD");
-            this.AskVM.Price = await MtGoxHttp.QuoteTask(MtGoxHttp.QuoteType.Ask, 1.0, "BTC", "USD");
-            this.LastVM.Price = await MtGoxHttp.QuoteLastTask("BTC", "USD");
-
-            var data = await BitcoinCharts.HistorySampleTask("mtgoxUSD", DateTime.UtcNow.Subtract(new TimeSpan(3, 0, 0)));
-            var coords = BitcoinCharts.AsTimeSeries(data);
-
-            this.Predict3deg.RefreshProperties(coords);
-            this.Predict5deg.RefreshProperties(coords);
-            this.Predict6deg.RefreshProperties(coords);
-            this.Predict7deg.RefreshProperties(coords);
         }
 
         public TickerVM BidVM
@@ -57,8 +78,6 @@ namespace BtcClient.UI
             get;
             set;
         }
-
-        public BaseCommand RefreshCommand { get; set; }
 
         public TrendPredictionControlVM Predict3deg { get; set; }
 

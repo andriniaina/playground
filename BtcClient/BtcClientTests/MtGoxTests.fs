@@ -27,7 +27,7 @@ module MtGoxStreamTests =
 
     let [<Fact>] MtGoxStream_PushResponse()=
         let pubnubFake = PubnubFake()
-        let tickerEUR = MtGoxStream.LiveTickerFactory (pubnubFake, MtGoxStream.PUBNUB_CHANNELS.ticker_BTCEUR, "BTCEUR")
-        tickerEUR.History |> Seq.length |> should equal 1
-        tickerEUR.History |> Seq.head |> should equal {Now=DateTime(2014,1,8,22,12,40); Last= 928.99499; Vwap=915.68177}
+        let tickerEUR = MtGoxStream.LiveTickerFactory (pubnubFake, MtGoxStream.PUBNUB_CHANNELS.ticker_BTCEUR, "BTCEUR", 200)
+        tickerEUR.SortedHistory |> Seq.length |> should equal 1
+        tickerEUR.SortedHistory |> Seq.head |> should equal {Now=DateTime(2014,1,8,22,12,40); Last= 928.99499; Vwap=915.68177; Bid=0.0; Ask=0.0}
 

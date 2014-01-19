@@ -23,10 +23,13 @@
             
         type MtGoxLiveTickerProvider(name:string, historyMaxCount:int) =
             inherit andri.BtcClient.LiveTickerProvider(name)
-            let tickerUpdated = new Event<Ticker>()
             let data = new andri.Utilities.CyclicObservableQueue<Tick>(historyMaxCount)
             let dvSort (d:DateTime,v:double) = d.Ticks
-            member x.History:seq<Tick> = data.InternalList |> Seq.sortBy (fun d -> d.Now)
+            member x.HistoryMaxCount = historyMaxCount
+            override x.Data = data :> IObservable<IList<Tick>> // 
+            member x.SortedHistory = data.InternalList |> Seq.sortBy (fun d -> d.Now)
+            member x.PushTick (o:Tick) =
+                data.Enqueue o
             member x.PushResponse (response:Newtonsoft.Json.Linq.JObject) =
                 debugf "Decoding MtGox ticker response"
                 let channel = jsonString response?channel
@@ -44,25 +47,21 @@
                 let buy = jsonDouble ticker?buy?value
                 let sell = jsonDouble ticker?sell?value
 
-                data.Enqueue {Now=now; Last=last; Vwap=vwap}
-
+                x.PushTick {Now=now; Last=last; Vwap=vwap; Bid=buy; Ask=sell}
                 debugf "(%s) currency_spread = last-last_all = %f-%f = %f" name last last_all (last-last_all)
-
-                tickerUpdated.Trigger({Name=name; Last= x.History})
-            member x.subscribeCallback(o:IList<obj>) =
+            member internal x.subscribeCallback(o:IList<obj>) =
                 let response = o |> Seq.head :?> Newtonsoft.Json.Linq.JObject
                 x.PushResponse(response)
-            override x.TickerUpdated with get() = tickerUpdated.Publish
             
-        let LiveTickerFactory(pubnub:PubnubWrapper, channel, friendlyName) =
-            let MAXCOUNT = 200
-            let ticker = new MtGoxLiveTickerProvider(friendlyName, MAXCOUNT)
+        let LiveTickerFactory(pubnub:PubnubWrapper, channel, friendlyName, maxCount) =
+            //let MAXCOUNT = 200
+            let ticker = new MtGoxLiveTickerProvider(friendlyName, maxCount)
             let historyCallback (provider:MtGoxLiveTickerProvider) (o:IList<obj>) =
                 let responses = o.[0] :?> IList<obj>
                 responses |> Seq.cast<Newtonsoft.Json.Linq.JObject> |> Seq.iter provider.PushResponse
                 
             // en background, commencer par télécharger l'historique
-            pubnub.DetailedHistory  channel   MAXCOUNT   (historyCallback ticker)   (errorCallback_generic)  |> ignore
+            //pubnub.DetailedHistory  channel   maxCount   (historyCallback ticker)   (errorCallback_generic)  |> ignore
             // s'enregistrer pour le stream
             pubnub.Subscribe  channel  (ticker.subscribeCallback)  connectCallback_obj  errorCallback_generic 
             ticker

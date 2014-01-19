@@ -40,6 +40,7 @@
                 }
         let HistorySampleTask (market) (start) =
             HistorySample (market) (start) |> Async.StartAsTask
+        let HistorySampleSynchronized market start = HistorySample market start |> Async.RunSynchronously
 
         let rec HistoryFull (market) (d1) (d2) : seq<BitcoinChartHistory> =
                 let data = HistorySample market d1 |> Async.RunSynchronously

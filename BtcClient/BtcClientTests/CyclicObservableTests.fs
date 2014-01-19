@@ -12,7 +12,7 @@ open System.Collections.Generic
 module CyclicObservableQueueTests =
     let [<Fact>] ``Subscribe to queue``() =
         let nbCalls = ref 0
-        let lastValue = ref (new List<int>())
+        let lastValue = ref (new List<int>() :> int IList)
         let callback o =
             nbCalls := !nbCalls + 1
             lastValue := o

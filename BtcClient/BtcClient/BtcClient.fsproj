@@ -89,11 +89,11 @@
     </Compile>
     <Compile Include="Log.fs" />
     <Compile Include="Newtonsoft.FsJson.fs" />
+    <Compile Include="BitcoinCharts.fs" />
     <Compile Include="abstract LiveParamProvider.fs" />
     <Compile Include="_MtGox.fs" />
     <Compile Include="MtGoxStream.fs" />
     <Compile Include="MtGoxHttp.fs" />
-    <Compile Include="BitcoinCharts.fs" />
     <Compile Include="DataAnalysis.fs" />
     <None Include="Program.fsx" />
     <None Include="DbBootstrap.fsx" />

@@ -20,23 +20,23 @@ namespace BtcClient.UI
     /// </summary>
     public partial class MainWindow : Window
     {
-        MainWindowVM _datacontext = new MainWindowVM();
-        System.Windows.Threading.DispatcherTimer dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
         public MainWindow()
         {
-            this.DataContext = _datacontext;
+
+            var data = BitcoinCharts.HistorySampleSynchronized("mtgoxUSD", DateTime.UtcNow.Subtract(new TimeSpan(3, 0, 0)));
+            var tickerProvider =MtGoxStream.LiveTickerFactory(
+                new MtGoxStream.PubnubWrapper(new PubNubMessaging.Core.Pubnub("", MtGoxStream.PUBNUB_KEY)),
+                MtGoxStream.PUBNUB_CHANNELS.ticker_BTCUSD,
+                "BTCUSD",
+                1000);
+            foreach (var d in data)
+            {
+                tickerProvider.PushTick(new Tick(d.Now, d.Price, 0, 0, 0));
+            }
+
+            this.DataContext = new MainWindowVM(tickerProvider);;
 
             InitializeComponent();
-
-            dispatcherTimer_Tick(null, null);
-            dispatcherTimer.Tick += dispatcherTimer_Tick;
-            dispatcherTimer.Interval = new TimeSpan(0, 15, 0);
-            dispatcherTimer.Start();
-        }
-
-        void dispatcherTimer_Tick(object sender, EventArgs e)
-        {
-            _datacontext.RefreshCommand.Execute(null);
         }
     }
 }
