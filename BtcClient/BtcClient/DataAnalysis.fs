@@ -59,10 +59,10 @@ module DataAnalysis =
         let data' = data |> Seq.map (fun (d,p) -> float(d.Ticks-xStart)/FACTOR , p )
         data',FACTOR,xStart
 
-    type TradingAdvice = | Buy of float | Sell of float
+    type TradingAdvice = | Buy of float*float | Sell of float*float
         with
         override x.ToString() =
-            match x with | Buy(a) -> sprintf "Buy(%f)" a | Sell(a) -> sprintf "Sell(%f)" a
+            match x with | Buy(d1,d2) -> sprintf "Buy(%f, %f)" d1 d2 | Sell(d1,d2) -> sprintf "Sell(%f, %f)" d1 d2
 
     let PredictTrend2 samplingRate degree (data:(DateTime*float) seq) =
         let _data,factor,xStart = shrinkScale samplingRate data
@@ -77,7 +77,7 @@ module DataAnalysis =
         let xi = (Seq.last xdata)*95.0/100.0
         let derivee1 = ValueAt coeffs' xi
         let derivee2 = ValueAt coeffs'' xi
-        if (derivee1 > 0.0) then Buy(derivee2) else Sell(derivee2)
+        if (derivee1 > 0.0) then Buy(derivee1, derivee2) else Sell(derivee1, derivee2)
 
 
     /// variation attendue par minute, sur une vision de 30min

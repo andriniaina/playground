@@ -11,6 +11,8 @@
             let unixTimeStampInTicks = unixTimestamp * 10L
             new DateTime(unixYear0.Ticks + unixTimeStampInTicks)
 
+        let connectCallback_obj (o:obj) =
+            debugf "connectCallback: %s" (o.ToString())
         let connectCallback_generic (o:System.Collections.Generic.IList<obj>) =
             let status = o |> Seq.nth 1 :?> string
             debugf "connectCallback: %s" (status)

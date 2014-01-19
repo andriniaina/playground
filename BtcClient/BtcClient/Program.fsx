@@ -1,18 +1,20 @@
-#I @"packages\FSharp.Charting.0.90.5\lib\net40"
+#I @"..\packages\FSharp.Charting.0.90.5\lib\net40"
 #I @"D:\dev\pubnub-c-sharp\csharp.net\3.5\PubNub-Messaging\bin\Debug"
 #I @"c:\dev\pubnub-c-sharp\csharp.net\3.5\PubNub-Messaging\bin\Debug"
+#I @"..\packages\MathNet.Numerics.2.6.2\lib\net40"
+#I @"..\packages\MathNet.Numerics.FSharp.2.6.0\lib\net40"
 
 #r @"PubNubMessaging.Core"
 #r @"Newtonsoft.Json"
 #r @"Fsharp.Charting"
 #r @"System.Windows.Forms"
 #r @"System.Windows.Forms.DataVisualization"
-#load "../andri.FsUtilities/Finance.fs"
-#load "../andri.FsUtilities/ServiceLocator.fs"
+#load "../../andri.FsUtilities/Finance.fs"
+#load "../../andri.FsUtilities/ServiceLocator.fs"
 open andri.Utilities
-#load "../andri.FsUtilities/Web.fs"
-#load "../andri.FsUtilities/Queue.fs"
-#load "../andri.FsUtilities/Strings.fs"
+#load "../../andri.FsUtilities/Web.fs"
+#load "../../andri.FsUtilities/Queue.fs"
+#load "../../andri.FsUtilities/Strings.fs"
 #load "Log.fs"
 #load "Newtonsoft.FsJson.fs"
 #load "abstract LiveParamProvider.fs"
@@ -33,9 +35,7 @@ open System.Collections.Generic
 #I @"..\BtcClient.Data\bin\x86\Debug"
 #r "BtcClient.Data"
 #r "System.Data"
-#r "System.Data.Sqlite"
 #r "System.Data.Linq"
-#r "DbLinq"
 open andri.BtcClient.Data
 
 /// An event which triggers at regular intervals reporting the real world time at each trigger
@@ -54,9 +54,9 @@ providers.Add(tickerEUR)
 providers.Add(tickerUSD)
 let tickers = new LiveTickerCollection(providers)
 
-let chartEUR = clock 1000 |> Event.map (fun _ -> tickerEUR.History |> Seq.map (fun t -> t.Now,t.Vwap) ) |> LiveChart.Line
+let chartEUR = clock 1000 |> Event.map (fun _ -> tickerEUR.History |> Seq.map (fun t -> t.Now,t.Last) ) |> LiveChart.Line
 let chartUSD = clock 1000 |> Event.map (fun _ -> tickerUSD.History |> Seq.map (fun t -> t.Now,t.Vwap)) |> LiveChart.Line
-Chart.Combine([chartEUR;chartUSD]).WithYAxis(Min=700.0).ShowChart()
+Chart.Combine([chartEUR;chartUSD]).WithYAxis(Min=600.0).ShowChart()
 chartUSD.WithYAxis(Min=800.0).ShowChart()
 
 #load "proxy.fs"

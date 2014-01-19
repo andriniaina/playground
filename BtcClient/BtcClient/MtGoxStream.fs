@@ -17,7 +17,7 @@
         type PubnubWrapper(pubnub:Pubnub) =
             abstract member DetailedHistory: string-> int-> (IList<obj>->unit)-> (PubnubClientError->unit) -> bool
             default x.DetailedHistory channel count userCallback errorCallback = pubnub.DetailedHistory(channel, count, userCallback, errorCallback)
-            abstract member Subscribe: string -> (IList<obj>->unit) -> (IList<obj>->unit) -> (PubnubClientError->unit) -> unit
+            abstract member Subscribe: string -> (obj IList->unit) -> (obj IList->unit) -> (PubnubClientError->unit) -> unit
             default x.Subscribe channel userCallback connectCallback errorCallback = pubnub.Subscribe(channel, userCallback, connectCallback, errorCallback)
         
             
@@ -50,10 +50,13 @@
                 debugf "(%s) currency_spread = last-last_all = %f-%f = %f" name last last_all (last-last_all)
 
                 tickerUpdated.Trigger({Name=name; Last= x.History})
+(*
+            member x.subscribeCallback(o:obj) =
+                printfn "%s" (o.ToString())
+*)
             member x.subscribeCallback(o:IList<obj>) =
-                let response = o :?> (IList<Newtonsoft.Json.Linq.JObject>) |> Seq.head
+                let response = o |> Seq.head :?> Newtonsoft.Json.Linq.JObject
                 x.PushResponse(response)
-
             override x.TickerUpdated with get() = tickerUpdated.Publish
             
         let LiveTickerFactory(pubnub:PubnubWrapper, channel, friendlyName) =
@@ -64,9 +67,9 @@
                 responses |> Seq.cast<Newtonsoft.Json.Linq.JObject> |> Seq.iter provider.PushResponse
                 
             // en background, commencer par télécharger l'historique
-            pubnub.DetailedHistory  channel   MAXCOUNT   (historyCallback ticker)   (errorCallback_generic)  |> ignore
+//            pubnub.DetailedHistory  channel   MAXCOUNT   (historyCallback ticker)   (errorCallback_generic)  |> ignore
             // s'enregistrer pour le stream
-            pubnub.Subscribe  channel  (ticker.subscribeCallback)  connectCallback_generic  errorCallback_generic 
+            pubnub.Subscribe  channel  (ticker.subscribeCallback)  connectCallback_obj  errorCallback_generic 
             ticker
 
             
