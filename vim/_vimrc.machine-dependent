@@ -1,3 +1,4 @@
 let $HOME='d:\dev\playground\vim'
 set runtimepath+=$HOME\vimfiles
+cd d:\dev\
 source $HOME\_vimrc
