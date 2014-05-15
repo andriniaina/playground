@@ -1,0 +1,33 @@
+[submodule "vim/submodules/vim-fugitive"]
+	path = vim/submodules/vim-fugitive
+	url = https://github.com/tpope/vim-fugitive.git
+[submodule "vim/submodules/FuzzyFinder"]
+	path = vim/submodules/FuzzyFinder
+	url = https://github.com/vim-scripts/FuzzyFinder.git
+[submodule "vim/submodules/L9"]
+	path = vim/submodules/L9
+	url = https://github.com/vim-scripts/L9.git
+[submodule "vim/submodules/vim-less"]
+	path = vim/submodules/vim-less
+	url = https://github.com/groenewege/vim-less.git
+[submodule "vim/submodules/dbext.vim"]
+	path = vim/submodules/dbext.vim
+	url = https://github.com/vim-scripts/dbext.vim.git
+[submodule "vim/submodules/DirDiff.vim"]
+	path = vim/submodules/DirDiff.vim
+	url = https://github.com/vim-scripts/DirDiff.vim.git
+[submodule "vim/submodules/visualMarks.vim"]
+	path = vim/submodules/visualMarks.vim
+	url = https://github.com/vim-scripts/visualMarks.vim.git
+[submodule "vim/submodules/AutoComplPop"]
+	path = vim/submodules/AutoComplPop
+	url = https://github.com/vim-scripts/AutoComplPop.git
+[submodule "vim/submodules/LargeFile"]
+	path = vim/submodules/LargeFile
+	url = https://github.com/vim-scripts/LargeFile.git
+[submodule "vim/submodules/vbnet.vim"]
+	path = vim/submodules/vbnet.vim
+	url = https://github.com/vim-scripts/vbnet.vim.git
+[submodule "vim/submodules/EnhCommentify.vim"]
+	path = vim/submodules/EnhCommentify.vim
+	url = https://github.com/vim-scripts/EnhCommentify.vim.git

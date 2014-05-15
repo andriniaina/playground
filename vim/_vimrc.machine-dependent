@@ -1,3 +1,9 @@
 let $HOME='d:\dev\playground\vim'
 set runtimepath+=$HOME\vimfiles
+cd $HOME
+
+if filereadable("d:/Program Files/git/bin/git.exe")
+	let g:fugitive_git_executable = '"d:/Program Files/git/bin/git.exe"'
+endif
+
 source $HOME\_vimrc

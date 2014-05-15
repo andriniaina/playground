@@ -86,9 +86,9 @@ endfunction
 
 function! Tabstyle_spaces_local()
   " Use 2 spaces
-  setlocal softtabstop=4
-  setlocal shiftwidth=4
-  setlocal tabstop=4
+  setlocal softtabstop=2
+  setlocal shiftwidth=2
+  setlocal tabstop=2
   setlocal expandtab
 endfunction
 
@@ -169,7 +169,6 @@ set virtualedit+=block
 
 " Sets path to directory buffer was loaded from
 " autocmd BufEnter * lcd %:p:h
-" cd D:\SELL\53p100\SELL
 set autochdir
 "set clipboard=unnamed
 set fillchars+=diff:\ 
@@ -274,7 +273,12 @@ autocmd FileType c set omnifunc=ccomplete#Complete
 " |                              Plug-ins                                     |
 " -----------------------------------------------------------------------------  
 
-source $VIMRUNTIME/macros/matchit.vim
+
+execute pathogen#infect('~/submodules/{}')
+
+if filereadable("$VIMRUNTIME/macros/matchit.vim")
+	source $VIMRUNTIME/macros/matchit.vim
+endif
 
 " NERDTree ********************************************************************
 " :noremap <Leader>n :NERDTreeToggle<CR>
@@ -303,12 +307,14 @@ noremap <Leader>w <Esc>:set wrap!<CR>
 noremap <Leader>e :tabnew<CR>:Explore<CR>
 
 " Fuzzy finder
-noremap <Leader>ff :FuzzyFinderFile<CR>
-noremap <Leader>fb :FuzzyFinderBuffer<CR>
-noremap <Leader>fr :FuzzyFinderMruFile<CR>
-noremap <Leader>fm :FuzzyFinderBookmark<CR>
-noremap <F3> :FuzzyFinderAddBookmark<CR>
-vnoremap <F3> :FuzzyFinderAddBookmarkAsSelectedText<CR><CR>
+let g:fuf_modesDisable = [ 'mrucmd', ]
+" let g:fuf_mrufile_maxItem = 50
+noremap <Leader>ff :FufFile<CR>
+noremap <Leader>fb :FufBuffer<CR>
+noremap <Leader>fr :FufMruFile<CR>
+noremap <Leader>fm :FufBookmarkFile<CR>
+noremap <F3> :FufBookmarkFileAdd<CR>
+vnoremap <F3> :FufBookmarkFileAddAsSelectedText<CR><CR>
 
 " Tab indents selected line in visual mode
 "" Indent selected lines
