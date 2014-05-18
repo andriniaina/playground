@@ -7,12 +7,12 @@
 #r @"Fsharp.Charting"
 #r @"System.Windows.Forms"
 #r @"System.Windows.Forms.DataVisualization"
-#load "../andri.FsUtilities/Finance.fs"
-#load "../andri.FsUtilities/ServiceLocator.fs"
+#load "../../andri.FsUtilities/Finance.fs"
+#load "../../andri.FsUtilities/ServiceLocator.fs"
 open andri.Utilities
-#load "../andri.FsUtilities/Web.fs"
-#load "../andri.FsUtilities/Queue.fs"
-#load "../andri.FsUtilities/Strings.fs"
+#load "../../andri.FsUtilities/Web.fs"
+#load "../../andri.FsUtilities/Queue.fs"
+#load "../../andri.FsUtilities/Strings.fs"
 #load "Log.fs"
 #load "Newtonsoft.FsJson.fs"
 #load "abstract LiveParamProvider.fs"
@@ -46,8 +46,8 @@ open andri.BtcClient.Data
 
 let byMinute (d:DateTime) = DateTime((d.Ticks/60000000L)*60000000L)
 let byHour (d:DateTime) = DateTime((d.Ticks/36000000000L)*36000000000L)
-let by30min (d:DateTime) = DateTime((d.Ticks/18000000000L)*18000000000L)
-let DATABASEPATH = @"C:\dev\playground\BtcClient\BtcClient.Data\BtcClient.db3"
+let by10min (d:DateTime) = DateTime((d.Ticks/6000000000L)*6000000000L)
+let DATABASEPATH = @"d:\dev\playground\BtcClient\BtcClient.Data\BtcClient.db3"
 
 let updateMarketHistory (marketName:string) =
     use ctx = new SQLite.SQLiteConnection(DATABASEPATH,false)
@@ -56,18 +56,20 @@ let updateMarketHistory (marketName:string) =
             .First().Now
         
     let data =
-        BitcoinCharts.HistorySample marketName (by30min(startTime- new TimeSpan(2,0,0)))
+        BitcoinCharts.HistorySample marketName (by10min(startTime- new TimeSpan(2,0,0)))
         |> Async.RunSynchronously
         
-    let endTime = (Seq.last data).Now |> by30min
+    let endTime = (Seq.last data).Now |> by10min
     // delete from BitcoinChartHistory
     
     let nbRows = ctx.Execute(@"delete from BitcoinChartHistory where Market=@market and Now>=@start and Now<=@end", marketName, startTime, endTime)
     (nbRows,startTime.ToString()) ||> printfn "%i lines deleted starting from %s"
 
+    printfn "Last date = %s" (data.Last().Now.ToString())
+
     data
     |> Seq.filter (fun o -> o.Now>startTime)
-    |> Seq.groupBy (fun o -> by30min(o.Now))
+    |> Seq.groupBy (fun o -> by10min(o.Now))
     |> Seq.collect (fun (t,g) ->
         let sumAmount = g |> Seq.sumBy (fun o -> o.Amount)
         let avgWPrice = (g |> Seq.sumBy (fun o -> o.Amount*o.Price)) / sumAmount

@@ -78,9 +78,9 @@ module DataAnalysis =
         let derivee1 = ValueAt coeffs' xi
         let derivee2 = ValueAt coeffs'' xi
         if (derivee1 > 0.0) then
-            if derivee2 > 0.0 then Buy(derivee1, derivee2) else Keep(derivee1, derivee2)
+            if derivee2 > 0.0 || (* cas spécial forte montée *) derivee1 > 0.2  then Buy(derivee1, derivee2) else Keep(derivee1, derivee2)
         else
-            if derivee2 < 0.0 then Sell(derivee1, derivee2) else Keep(derivee1, derivee2)
+            if derivee2 < 0.0 || (* cas spécial forte baisse *) derivee1 < -0.2 then Sell(derivee1, derivee2) else Keep(derivee1, derivee2)
 
 
     /// variation attendue par minute, sur une vision de 30min
@@ -110,19 +110,39 @@ module DataAnalysis =
         ]
     
         let min = ydata |> Seq.min
-        (*
-        let coeffs' = coeffs |> Derive 
-        let coords' = [
-            for x in xL..xR ->
-            x,ValueAt coeffs' (float x)
-        ]*)
     
         Chart.Combine([
                             FSharp.Charting.Chart.Line(data).WithYAxis(Min=min);
                             FSharp.Charting.Chart.Line(coords |> Seq.map (fun (d,p) -> DateTime(int64(d*FACTOR)+ xStart) ,p)).WithYAxis(Min=min)
             ])
-            //.WithLegend()
             .WithYAxis(Min=min)
             .ShowChart()
+            (*
+    let ShowLiveChart samplingRate degree (data:(DateTime*float) seq IObservable) =
 
+        let FACTOR = samplingRate*60000000.0
+        let min = ref 0.0
+        let getCoords (_data:(DateTime*float) seq) =
+            let xStart = (fst(Seq.head _data)).Ticks
+            let xdata = _data |> Seq.map (fun d -> float ((fst d).Ticks-xStart)/FACTOR)
+            let ydata = _data |> Seq.map (fun d -> snd d)
+
+            let coeffs = RegressionCoefficients degree xdata ydata
+            let xL,xR=Seq.head xdata,Seq.last xdata
+            let coords = [
+                for x in xL..xR ->
+                x,ValueAt coeffs (float x)
+            ]
+    
+            min := Seq.min ydata
+            coords |> Seq.map (fun (d,p) -> DateTime(int64(d*FACTOR)+ xStart) ,p)
+        let coords = Observable.map getCoords data
+    
+        Chart.Combine([
+                            FSharp.Charting.LiveChart.Line(data)//.WithYAxis(Min=min);
+                            FSharp.Charting.LiveChart.Line(coords)//.WithYAxis(Min=min)
+            ])
+            .WithYAxis(Min= !min)
+            .ShowChart()
+            *)
     

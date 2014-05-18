@@ -59,7 +59,7 @@ namespace BtcClient.UI
 
         void ShowGraph_OnExecute(object sender, EventArgs e)
         {
-            DataAnalysis.ShowChart(30.0, this.degree, data);
+            DataAnalysis.ShowChart(15.0, this.degree, data);
         }
     }
 }

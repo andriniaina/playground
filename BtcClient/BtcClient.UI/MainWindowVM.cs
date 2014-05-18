@@ -11,23 +11,8 @@ using System.Threading;
 
 namespace BtcClient.UI
 {
-    public class MainWindowVM : BaseVM 
+    public class MainWindowVM : BaseVM
     {
-    //    public class TickObserver : IObserver<IList<Tick>>
-    //    {
-    //        public void OnCompleted()
-    //        {
-    //        }
-
-    //        public void OnError(Exception error)
-    //        {
-    //            throw new NotImplementedException();
-    //        }
-
-    //        public void OnNext(IList<Tick> value)
-    //        {
-    //        }
-    //    }
         public MainWindowVM(MtGoxStream.MtGoxLiveTickerProvider liveProvider)
         {
             this.BidVM = new TickerVM() { Label = "Bid (vente)", Price = 0.0 };
@@ -44,47 +29,48 @@ namespace BtcClient.UI
             Thread.Sleep(10000);
             liveProvider.Data.Subscribe(list =>
             {
-                if (list.Count >= 200)
+                var lastValues = useLastPrice ? (from o in list where o.Now > new DateTime(2002, 1, 1) select Tuple.Create(o.Now, o.Last)).ToList() : (from o in list where o.Vwap > 0 && o.Now > new DateTime(2002, 1, 1) select Tuple.Create(o.Now, o.Vwap)).ToList();
+                if (lastValues.Count >= 10)
                 {
-                    var lastValues = (from o in list select Tuple.Create(o.Now, o.Last)).ToList();
-                    //var bids = (from o in list where o.Bid > 0 select Tuple.Create(o.Now, o.Bid)).ToList();
-                    //if (bids.Count > 50)
-                    {
-                        this.Predict3deg.RefreshProperties(lastValues);
-                        this.Predict5deg.RefreshProperties(lastValues);
-                        this.Predict6deg.RefreshProperties(lastValues);
-                        this.Predict7deg.RefreshProperties(lastValues);
-                    }
+                    this.Predict3deg.RefreshProperties(lastValues);
+                    this.Predict5deg.RefreshProperties(lastValues);
+                    this.Predict6deg.RefreshProperties(lastValues);
+                    this.Predict7deg.RefreshProperties(lastValues);
                 }
             });
         }
 
-        public void StartSubscribe()
+        private bool useLastPrice = true;
+
+        public bool UseStrategy_LastPrice
         {
+            get { return useLastPrice; }
+            set
+            {
+                useLastPrice = value;
+                OnPropertyChanged("UseStrategy_Vwap");
+                OnPropertyChanged("UseStrategy_LastPrice");
+            }
         }
 
-        public TickerVM BidVM
+        public bool UseStrategy_Vwap
         {
-            get;
-            set;
+            get { return !useLastPrice; }
+            set
+            {
+                useLastPrice = !value;
+                OnPropertyChanged("UseStrategy_Vwap");
+                OnPropertyChanged("UseStrategy_LastPrice");
+            }
         }
-        public TickerVM AskVM
-        {
-            get;
-            set;
-        }
-        public TickerVM LastVM
-        {
-            get;
-            set;
-        }
+
+        public TickerVM BidVM { get; set; }
+        public TickerVM AskVM { get; set; }
+        public TickerVM LastVM { get; set; }
 
         public TrendPredictionControlVM Predict3deg { get; set; }
-
         public TrendPredictionControlVM Predict7deg { get; set; }
-
         public TrendPredictionControlVM Predict5deg { get; set; }
-
         public TrendPredictionControlVM Predict6deg { get; set; }
     }
 }

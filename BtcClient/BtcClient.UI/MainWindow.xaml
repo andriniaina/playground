@@ -10,10 +10,11 @@
             <ColumnDefinition></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <StackPanel Grid.Column="0">
-            <Button Name="btnRefresh" Content="ForceRefresh" Command="{Binding Path=RefreshCommand}"/>
             <local:Ticker x:Name="TickerControl_Last" DataContext="{Binding Path=LastVM}"></local:Ticker>
             <local:Ticker x:Name="TickerControl_Ask" DataContext="{Binding Path=AskVM}"></local:Ticker>
             <local:Ticker x:Name="TickerControl_Bid" DataContext="{Binding Path=BidVM}"></local:Ticker>
+            <RadioButton Content="Last" GroupName="DataSelectionStrategy_RadioButtons" Checked="RadioButton_Checked_1" IsChecked="{Binding UseStrategy_LastPrice}"/>
+            <RadioButton Content="Vwap" GroupName="DataSelectionStrategy_RadioButtons" Checked="RadioButton_Checked_1" IsChecked="{Binding UseStrategy_Vwap}"/>
         </StackPanel>
         <StackPanel Grid.Column="1">
             <local:TrendPredictionControl DataContext="{Binding Path=Predict3deg}"></local:TrendPredictionControl>
