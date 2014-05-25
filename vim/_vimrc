@@ -41,22 +41,26 @@ set diffopt=filler,iwhite
 
 " Tidy XML file
 function! TidyXml()
-	silent! %!tidy --quiet yes --input-xml yes --indent yes --wrap 0 --wrap-attributes no
+	let cmd = expand('silent! %!$HOME/tidy --quiet yes --input-xml yes --indent yes --wrap 0 --wrap-attributes no')
+	execute cmd
 	silent! %s/  /	/g
 endfunction
 " Tidy HTML5 file
 function! TidyHtml5()
-	silent! %!tidy5 --quiet yes --input-xml no --indent auto --wrap 0 --wrap-attributes no --new-pre-tags script --tab-size 2
+	let cmd = expand('silent! %!$HOME/tidy5 --quiet yes --input-xml no --indent auto --wrap 0 --wrap-attributes no --new-pre-tags script --tab-size 2')
+	execute cmd
 	silent! %s/  /	/g
 endfunction
 " Tidy HTML file
 function! TidyHtml()
-	silent! %!tidy --quiet yes --input-xml no --indent yes --wrap 0 --wrap-attributes no
+	let cmd = expand('silent! %!$HOME/tidy --quiet yes --input-xml no --indent yes --wrap 0 --wrap-attributes no')
+	execute cmd
 	silent! %s/  /	/g
 endfunction
 " Tidy SQL file
 function! TidySQL()
-	silent! %!SqlFormatter
+	let cmd = expand('silent! %!$HOME/SqlFormatter')
+	execute cmd
 	silent! %s/  /	/g
 endfunction
 
