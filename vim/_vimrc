@@ -59,11 +59,13 @@ function! TidyHtml()
 endfunction
 " Tidy SQL file
 function! TidySQL()
-	let cmd = expand('silent! %!$HOME/SqlFormatter')
+	let myrange = a:firstline.','.a:lastline
+	let cmd = expand('silent! '.myrange.'!$HOME/SqlFormatter')
 	execute cmd
-	silent! %s/  /	/g
+	exe 'silent! '.myrange.'s/  /	/g'
 endfunction
 
+command! -range=% TidySQL call TidySQL()
 function! Tabstyle_tabs()
   " Using 4 column tabs
   set softtabstop=4
