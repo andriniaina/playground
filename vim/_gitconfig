@@ -1,0 +1,11 @@
+[diff]
+	tool = vimdiff
+	guitool = gvim_andri
+[difftool]
+	prompt = false
+[merge]
+	tool = gvim_andri
+[mergetool "gvim_andri"]
+	cmd = "\"D:/Program Files/Vim/vim74/gvim.exe\" -d "$BASE" "$(pwd -W)/$MERGED" "$LOCAL" -s vim_tfs_merge.vim && rm "$BASE" && rm "$LOCAL" && rm "$REMOTE"   "
+[difftool "gvim_andri"]
+	cmd = "\"D:/Program Files/Vim/vim74/gvim.exe\" -d "$LOCAL" "$(pwd -W)/$MERGED" && rm "$LOCAL" "
