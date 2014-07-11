@@ -6,6 +6,7 @@
 [merge]
 	tool = gvim_andri
 [mergetool "gvim_andri"]
-	cmd = "\"D:/Program Files/Vim/vim74/gvim.exe\" -d "$BASE" "$(pwd -W)/$MERGED" "$LOCAL" -s vim_tfs_merge.vim && rm "$BASE" && rm "$LOCAL" && rm "$REMOTE"   "
+	cmd = "\"D:/Program Files/Vim/vim74/gvim.exe\" -d "$(pwd -W)/$BASE" "$(pwd -W)/$MERGED" "$(pwd -W)/$LOCAL" && rm "$(pwd -W)/$BASE" && rm "$(pwd -W)/$LOCAL" && rm "$(pwd -W)/$REMOTE"   "
 [difftool "gvim_andri"]
 	cmd = "\"D:/Program Files/Vim/vim74/gvim.exe\" -d "$LOCAL" "$(pwd -W)/$MERGED" && rm "$LOCAL" "
+
