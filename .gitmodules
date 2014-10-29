@@ -46,3 +46,6 @@
 	path = vim/submodules/vim-airline
 	url = https://github.com/bling/vim-airline.git
 	ignore = dirty
+[submodule "vim/submodules/syntastic"]
+	path = vim/submodules/syntastic
+	url = https://github.com/scrooloose/syntastic.git
