@@ -325,6 +325,8 @@ noremap <Leader>e :tabnew<CR>:Explore<CR>
 " Fuzzy finder
 let g:fuf_modesDisable = [ 'mrucmd', ]
 " let g:fuf_mrufile_maxItem = 50
+noremap <Leader>bn :bNext<CR>
+noremap <Leader>bp :bPrevious<CR>
 noremap <Leader>ff :FufFile<CR>
 noremap <Leader>fb :FufBuffer<CR>
 noremap <Leader>fr :FufMruFile<CR>
