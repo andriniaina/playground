@@ -49,3 +49,6 @@
 [submodule "vim/submodules/syntastic"]
 	path = vim/submodules/syntastic
 	url = https://github.com/scrooloose/syntastic.git
+[submodule "vim/submodules/vim-markdown"]
+	path = vim/submodules/vim-markdown
+	url = https://github.com/plasticboy/vim-markdown.git
