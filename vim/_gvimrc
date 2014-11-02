@@ -28,7 +28,6 @@ elseif has("gui_win32")
 	set guioptions+=b	"horizontal scrollbar
 	set anti " Antialias font
 	au GUIEnter * simalt ~x	"n
-	" set guifont=Consolas:h11:cANSI
 	set guifont=Consolas:h11:cANSI,Lucida_Console:h10:cANSI,Courier_New:h10:cANSI
 end
 

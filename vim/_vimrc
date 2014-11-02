@@ -29,7 +29,7 @@
 set nocompatible
 let mapleader = ","
 set bufhidden=unload
-" set shellslash
+set shellslash
 
 " Tabs ************************************************************************
 "set sta " a <Tab> in an indent inserts 'shiftwidth' spaces
@@ -39,37 +39,7 @@ command DiffOrig vert new | set bt=nofile | r # | 0d_ | diffthis | wincmd p | di
 command -bar SqlComplete exe 'silent! DBCompleteProcedures' | exe 'silent! DBCompleteTables'
 set diffopt=filler,iwhite
 
-" Tidy XML file
-function! TidyXml() range
-	let encoding = substitute(&l:fileencoding, "-", "", "")
-	let cmd = expand('silent! '.a:firstline.','.a:lastline.'!$HOME/tidy --quiet yes --input-xml yes --indent yes --wrap 0 --wrap-attributes no --char-encoding '.encoding)
-	execute cmd
-	silent! %s/  /	/g
-	echo cmd
-endfunction
-" Tidy HTML5 file
-function! TidyHtml5()
-	let encoding = substitute(&l:fileencoding, "-", "", "")
-	let cmd = expand('silent! %!$HOME/tidy5 --quiet yes --input-xml no --indent auto --wrap 0 --bare yes --clean yes --tidy-mark no --wrap-attributes no --new-pre-tags script --tab-size 2 --char-encoding '.encoding)
-	execute cmd
-	silent! %s/  /	/g
-endfunction
-" Tidy HTML file
-function! TidyHtml()
-	let encoding = substitute(&l:fileencoding, "-", "", "")
-	let cmd = expand('silent! %!$HOME/tidy --quiet yes --input-xml no --indent yes --wrap 0 --bare yes --clean yes --tidy-mark no --wrap-attributes no --char-encoding '.encoding)
-	execute cmd
-	silent! %s/  /	/g
-endfunction
-" Tidy SQL file
-function! TidySQL() range
-	let myrange = a:firstline.','.a:lastline
-	let cmd = expand('silent! '.myrange.'!$HOME/SqlFormatter')
-	execute cmd
-	exe 'silent! '.myrange.'s/  /	/g'
-	echo cmd
-endfunction
-
+" see tidy.vim
 command! -range=% TidySQL <line1>,<line2>call TidySQL()
 command! -range=% TidyXml <line1>,<line2>call TidyXml()
 command! TidyHtml call TidyHtml()
@@ -123,7 +93,7 @@ set numberwidth=4
 " set fdc=2
 
 " Windows *********************************************************************
-set equalalways " Multiple windows, when created, are equal in size
+set noequalalways " keep window size after bufclose
 set splitbelow splitright
 
 "Vertical split then hop to new buffer
@@ -150,7 +120,7 @@ vnoremap <C-h> :s/
 "set t_Co=256 " 256 colors
 set background=dark 
 syntax on " syntax highlighting
-colorscheme bClear
+colorscheme bclear
 
 
 " Status Line *****************************************************************
@@ -234,7 +204,6 @@ set vb t_vb=
 
 " Invisible characters *********************************************************
 set listchars=trail:.,tab:»\ ,eol:¶
-"set nolist
 set nolist
 noremap <Leader>i :set list!<CR> " Toggle invisible chars
 
@@ -259,14 +228,13 @@ inoremap <C-S-Right> <Esc>vw
 inoremap <C-S-Left> <Esc>v<S-Left>
 
 nnoremap <C-Left> b
-"nnoremap <S-Left> <C-o>B
 nnoremap <C-Right> w
-"nnoremap <S-Right> <C-o>W
 
 noremap <F12> <Esc>:reg<Cr>
 inoremap <F12> <C-o>:reg<Cr>
-noremap <F11> <Esc>:set im!<Cr>
-inoremap <F11> <C-o>:set im!<Cr>
+" see plugin\Fullscreen.vim
+noremap <F11> :call ToggleFullscreen()<Cr>
+
 
 " Ruby stuff ******************************************************************
 "compiler ruby         " Enable compiler support for ruby
@@ -297,30 +265,17 @@ if filereadable("$VIMRUNTIME/macros/matchit.vim")
 endif
 
 " NERDTree ********************************************************************
-" :noremap <Leader>n :NERDTreeToggle<CR>
-
-" User instead of Netrw when doing an edit /foobar
-" let NERDTreeHijackNetrw=1
-
-" Single click for everything
-" let NERDTreeMouseMode=1
 
 
 " SnippetsEmu *****************************************************************
-"imap <unique> <C-j> <Plug>Jumper
-"let g:snip_start_tag = "_\."
-"let g:snip_end_tag = "\._"
-"let g:snip_elem_delim = ":"
-"let g:snip_set_textmate_cp = '1'  " Tab to expand snippets, not automatically.
 
-" quit
-" :noremap <Leader>q <Esc>:q<CR>
 
 " Toggle wrap
 noremap <Leader>w <Esc>:set wrap!<CR>
 
 " netrw Explore tree 
-noremap <Leader>e :tabnew<CR>:Explore<CR>
+let g:netrw_winsize = 85
+noremap <Leader>e :let g:netrw_sort_by="time" \| let g:netrw_sort_direction="reverse" \|  Vexplore!<CR>
 
 " Fuzzy finder
 let g:fuf_modesDisable = [ 'mrucmd', ]
@@ -363,10 +318,6 @@ set wildmenu
 " -----------------------------------------------------------------------------  
 
 " Mac *************************************************************************
-"if has("mac") 
-  "" 
-"endif
- 
 " Windows *********************************************************************
 if has("gui_win32")
 	" Set Swap directory
@@ -383,13 +334,6 @@ if has("persistent_undo")
 endif
 
 
-
-
-" -----------------------------------------------------------------------------  
-" |                               Startup                                     |
-" -----------------------------------------------------------------------------  
-" Open NERDTree on start
-"autocmd VimEnter * exe 'NERDTree' | wincmd l 
 
 
 

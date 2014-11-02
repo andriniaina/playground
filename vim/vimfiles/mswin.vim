@@ -25,18 +25,18 @@ vnoremap <BS> d
 
 " CTRL-X and SHIFT-Del are Cut
 vnoremap <C-X> "+x
-vnoremap <S-Del> "+x
+"vnoremap <S-Del> "+x
 
 " CTRL-C and CTRL-Insert are Copy
 vnoremap <C-C> "+y
-vnoremap <C-Insert> "+y
+"vnoremap <C-Insert> "+y
 
 " CTRL-V and SHIFT-Insert are Paste
 map <C-V>		"+gp
-map <S-Insert>		"+gp
+"map <S-Insert>		"+gp
 
 cmap <C-V>		<C-R>+
-cmap <S-Insert>		<C-R>+
+"cmap <S-Insert>		<C-R>+
 
 " Pasting blockwise and linewise selections is not possible in Insert and
 " Visual mode without the +virtualedit feature.  They are pasted as if they
