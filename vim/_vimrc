@@ -27,7 +27,7 @@
 
 
 set nocompatible
-let mapleader = ","
+let mapleader = "Â²"
 set bufhidden=unload
 set shellslash
 
@@ -120,7 +120,9 @@ vnoremap <C-h> :s/
 "set t_Co=256 " 256 colors
 set background=dark 
 syntax on " syntax highlighting
-colorscheme bclear
+if &t_Co=="" || &t_Co>=128
+	colorscheme bclear
+endif
 
 
 " Status Line *****************************************************************
@@ -203,7 +205,7 @@ set vb t_vb=
 
 
 " Invisible characters *********************************************************
-set listchars=trail:.,tab:»\ ,eol:¶
+set listchars=trail:.,tab:Â»\ ,eol:Â¶
 set nolist
 noremap <Leader>i :set list!<CR> " Toggle invisible chars
 
@@ -258,7 +260,9 @@ autocmd FileType c set omnifunc=ccomplete#Complete
 
 
 execute pathogen#infect('~/submodules/{}')
-set laststatus=2 " vim-airline
+" vim-airline
+set laststatus=2
+let g:airline#extensions#tabline#enabled = 1
 
 if filereadable("$VIMRUNTIME/macros/matchit.vim")
 	source $VIMRUNTIME/macros/matchit.vim
@@ -280,8 +284,8 @@ noremap <Leader>e :let g:netrw_sort_by="time" \| let g:netrw_sort_direction="rev
 " Fuzzy finder
 let g:fuf_modesDisable = [ 'mrucmd', ]
 " let g:fuf_mrufile_maxItem = 50
-noremap <Leader>bn :bNext<CR>
-noremap <Leader>bp :bPrevious<CR>
+noremap <Leader><Tab> :bnext<CR>
+noremap <Leader><S-Tab> :bprevious<CR>
 noremap <Leader>ff :FufFile<CR>
 noremap <Leader>fb :FufBuffer<CR>
 noremap <Leader>fr :FufMruFile<CR>
