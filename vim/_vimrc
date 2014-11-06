@@ -118,10 +118,13 @@ vnoremap <C-h> :s/
 
 " Colors **********************************************************************
 "set t_Co=256 " 256 colors
-set background=dark 
 syntax on " syntax highlighting
 if &t_Co=="" || &t_Co>=128
+	set background=light
 	colorscheme bclear
+else
+	set t_Co=16
+	set background=dark
 endif
 
 
@@ -129,8 +132,11 @@ endif
 set showcmd
 set ruler " Show ruler
 set statusline=%F%M
-"set ch=2 " Make command line two lines high
 
+" Status vim-airline *****************
+set laststatus=2
+"set ch=2 " Make command line two lines high
+let g:airline#extensions#tabline#enabled = 1
 
 " Line Wrapping ***************************************************************
 set nowrap
@@ -141,11 +147,6 @@ set virtualedit+=block
 
 
 " Mappings ********************************************************************
-" Professor VIM says '87% of users prefer jj over esc', jj abrams disagrees
-"imap jj <Esc>
-"imap uu _
-"imap hh =>
-"imap aa @
 
 
 " Directories *****************************************************************
@@ -157,7 +158,7 @@ set virtualedit+=block
 " Sets path to directory buffer was loaded from
 " autocmd BufEnter * lcd %:p:h
 set autochdir
-"set clipboard=unnamed
+"set clipboard=unnamed	" use different clipboard for vim yanks and windows copy
 set fillchars+=diff:\ 
 
 " force utf-8 and compatible font(?)
@@ -184,11 +185,11 @@ au FileType python                     call Tabstyle_spaces_local()
 " Insert New Line **************************************************************
 nnoremap <S-Enter> O<ESC> " awesome, inserts new line without going into insert mode
 nnoremap <Enter> o<ESC>
-"nnoremap <Enter> :a<Enter><Enter>.<Enter>
-" map <S-Enter> o
 " set fo-=r " do not insert a comment leader after an enter, (no work, fix!!)
 nnoremap <BS> X
 nnoremap <Space> a<Space><Esc>
+nnoremap <C-S-Down> :m +1<Cr>
+nnoremap <C-S-Up> :m -2<Cr>
 
 
 " Sessions ********************************************************************
@@ -260,11 +261,8 @@ autocmd FileType c set omnifunc=ccomplete#Complete
 
 
 execute pathogen#infect('~/submodules/{}')
-" vim-airline
-set laststatus=2
-let g:airline#extensions#tabline#enabled = 1
 
-if filereadable("$VIMRUNTIME/macros/matchit.vim")
+if filereadable(expand("$VIMRUNTIME/macros/matchit.vim"))
 	source $VIMRUNTIME/macros/matchit.vim
 endif
 
@@ -307,7 +305,7 @@ vnoremap <S-Tab> <gv
 "let g:AutoComplPop_CompleteOption = '.,w,b,u,t,k'
 "set complete=.
 let g:AutoComplPop_IgnoreCaseOption = 1
-let g:AutoComplPop_BehaviorKeywordLength = 5
+let g:AutoComplPop_BehaviorKeywordLength = 4
 let g:EnhCommentifyBindInInsert = 'No'
 
 
@@ -344,9 +342,9 @@ endif
 " -----------------------------------------------------------------------------  
 " |                               Host specific                               |
 " -----------------------------------------------------------------------------  
-if filereadable(expand("~/.vimrc.local"))
-  source ~/.vimrc.local
-endif
+"if filereadable(expand("~/.vimrc.local"))
+"  source ~/.vimrc.local
+"endif
 
 "if hostname() == "foo"
   " do something
