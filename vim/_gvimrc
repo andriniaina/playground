@@ -16,30 +16,22 @@ elseif has("gui_gtk2")
 elseif has("x11")
 	source $HOME\vimfiles\mswin.vim
 elseif has("gui_win32")
-	
 	source $HOME\vimfiles\mswin.vim
 
 	behave xterm
 	
 	set guioptions-=T  " remove toolbar
-	set guioptions+=m	" menu bar is present
-	set guioptions+=L	" left hand scrollbar
-	set guioptions+=r	"right hand scrollbar
-	set guioptions+=b	"horizontal scrollbar
+	set guioptions+=m  " menu bar is present
+	set guioptions+=L  " left hand scrollbar
+	set guioptions+=r  " right hand scrollbar
+	set guioptions+=b  " horizontal scrollbar
 	set anti " Antialias font
-	au GUIEnter * simalt ~x	"n
+	au GUIEnter * simalt ~x   " maximize window on startup
 	set guifont=Consolas_for_Powerline_FixedD:h11,Consolas:h11:cANSI,Lucida_Console:h10:cANSI,Courier_New:h10:cANSI
 
 	if hostname() == "DESKTOP-PC"
 		let g:airline_powerline_fonts = 1
 		let g:airline_symbols = {}
-"        let g:airline_left_sep = "⮀"
-"        let g:airline_left_alt_sep      = '⮁'
-"        let g:airline_right_sep         = '⮂'
-"        let g:airline_right_alt_sep     = '⮃'
-"        let g:airline_branch_prefix     = '⭠'
-"        let g:airline_readonly_symbol   = '⭤'
-"        let g:airline_linecolumn_prefix = '⭡'
 		let g:airline_left_sep = "\u2b80"
 		let g:airline_left_alt_sep = "\u2b81"
 		let g:airline_right_sep = "\u2b82"
@@ -47,9 +39,10 @@ elseif has("gui_win32")
 		let g:airline_symbols.branch = "\u2b60"
 		let g:airline_symbols.readonly = "\u2b64"
 		let g:airline_symbols.linenr = "\u2b61"
+		let g:airline_symbols.space = " "
+		let g:airline_symbols.whitespace = "\u02fd"
+		let g:airline_symbols.modified = "*"
 	endif
-
-
 end
 
 noremap <Leader>t <Esc>:tabnew<CR>
