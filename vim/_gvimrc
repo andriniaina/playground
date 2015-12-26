@@ -26,10 +26,10 @@ elseif has("gui_win32")
 	set guioptions+=r  " right hand scrollbar
 	set guioptions+=b  " horizontal scrollbar
 	set anti " Antialias font
-	au GUIEnter * simalt ~x   " maximize window on startup
+	" au GUIEnter * simalt ~x   " maximize window on startup
 	set guifont=Consolas_for_Powerline_FixedD:h11,Consolas:h11:cANSI,Lucida_Console:h10:cANSI,Courier_New:h10:cANSI
 
-	if hostname() == "DESKTOP-PC"
+	if hostname() == "DESKTOP-1MMBAGK"
 		let g:airline_powerline_fonts = 1
 		let g:airline_symbols = {}
 		let g:airline_left_sep = "\u2b80"
