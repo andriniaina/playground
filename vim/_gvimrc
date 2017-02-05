@@ -16,6 +16,7 @@ elseif has("gui_gtk2")
 elseif has("x11")
 	source $HOME\vimfiles\mswin.vim
 elseif has("nvim")
+	call GuiWindowMaximized(1)
 	source $HOME\vimfiles\mswin.vim
 	behave xterm
 	" Guifont! Consolas:h11:cANSI
