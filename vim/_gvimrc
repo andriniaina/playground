@@ -27,10 +27,19 @@ elseif has("gui_win32")
 	set guioptions+=b  " horizontal scrollbar
 	set anti " Antialias font
 	" au GUIEnter * simalt ~x   " maximize window on startup
-	set guifont=Consolas_for_Powerline_FixedD:h11,Consolas:h11:cANSI,Lucida_Console:h10:cANSI,Courier_New:h10:cANSI
+	set guifont=Consolas_for_Powerline_FixedD:h11,DejaVu_Sans_Mono_for_Powerline:h10:cANSI,Consolas:h11:cANSI,Lucida_Console:h10:cANSI,Courier_New:h10:cANSI
 
 	if hostname() == "DESKTOP-1MMBAGK"
 		let g:airline_powerline_fonts = 1
+		" standard powerline symbols:
+		" let g:airline_left_sep = ''
+		" let g:airline_left_alt_sep = ''
+		" let g:airline_right_sep = ''
+		" let g:airline_right_alt_sep = ''
+		" let g:airline_symbols.branch = ''
+		" let g:airline_symbols.readonly = ''
+		" let g:airline_symbols.linenr = ''
+		" deprecated Consolas powerline symbols :
 		let g:airline_symbols = {}
 		let g:airline_left_sep = "\u2b80"
 		let g:airline_left_alt_sep = "\u2b81"

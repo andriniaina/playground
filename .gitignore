@@ -108,3 +108,4 @@ Backup*/
 UpgradeLog*.XML
 
 /BtcClient/proxy.fs
+vim/.viminfo
