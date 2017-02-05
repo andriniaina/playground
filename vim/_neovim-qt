@@ -1,9 +1,1 @@
-source $HOME\vimfiles\mswin.vim
-behave xterm
-Guifont! Consolas:h11:cANSI
-
-noremap <Leader>t <Esc>:tabnew<CR>
-
-set gtl=%t%M gtt=%F
-set vb t_vb=
-
+source $HOME\_gvimrc
