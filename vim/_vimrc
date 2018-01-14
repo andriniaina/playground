@@ -257,8 +257,12 @@ autocmd FileType c set omnifunc=ccomplete#Complete
 " |                              Plug-ins                                     |
 " -----------------------------------------------------------------------------  
 
-
-execute pathogen#infect('~/submodules/{}')
+if has('nvim')
+    set clipboard+=unnamedplus
+else
+	" bug avec neovim????
+	execute pathogen#infect('~/submodules/{}')
+endif
 
 if filereadable(expand("$VIMRUNTIME/macros/matchit.vim"))
 	source $VIMRUNTIME/macros/matchit.vim

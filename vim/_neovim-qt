@@ -1,1 +1,5 @@
-source $HOME\_gvimrc
+let $HOME='u:\dev\playground\vim'
+set runtimepath+=$HOME\vimfiles
+cd $HOME
+
+source $HOME\_vimrc
