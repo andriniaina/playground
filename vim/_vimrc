@@ -241,8 +241,8 @@ set nolist
 noremap <Leader>i :set list!<CR> " Toggle invisible chars
 
 " Mouse ***********************************************************************
-"set mouse=a " Enable the mouse
-"behave xterm
+set mouse=a " Enable the mouse
+behave xterm
 "set selectmode=mouse
 
 
