@@ -11,9 +11,6 @@ AirlineTheme cobalt2
 
 
 " OS Specific *****************************************************************
-if has("nvim") && has("win32")
-	Guifont! Consolas for Powerline FixedD:h11
-endif
 if has("gui_macvim")
 	set fuoptions=maxvert,maxhorz " fullscreen options (MacVim only), resized window when changed to fullscreen
 	set guifont=Monaco:h13
@@ -23,8 +20,11 @@ elseif has("gui_gtk2")
 	set guifont=Monospace
 	set guioptions-=T  " remove toolbar
 elseif has("x11")
-	source $HOME\vimfiles\mswin.vim
+	" nothing
 elseif has("nvim")
+	if has("win32")
+		Guifont! Consolas for Powerline FixedD:h11
+	endif
 	call GuiWindowMaximized(1)
 elseif has("gui_win32")
 	set guioptions-=T  " remove toolbar
