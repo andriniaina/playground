@@ -4,6 +4,7 @@
 " -----------------------------------------------------------------------------
 
 
+behave xterm
 let g:airline_powerline_fonts=1
 " AirlineTheme badwolf
 AirlineTheme cobalt2
@@ -21,12 +22,8 @@ elseif has("gui_gtk2")
 elseif has("x11")
 	source $HOME\vimfiles\mswin.vim
 elseif has("nvim")
-	behave xterm
 	call GuiWindowMaximized(1)
 elseif has("gui_win32")
-
-	behave xterm
-
 	set guioptions-=T  " remove toolbar
 	set guioptions+=m  " menu bar is present
 	set guioptions+=L  " left hand scrollbar
