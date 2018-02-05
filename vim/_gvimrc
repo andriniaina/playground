@@ -4,6 +4,7 @@
 " -----------------------------------------------------------------------------
 
 
+let g:airline_powerline_fonts=1
 " OS Specific *****************************************************************
 if has("gui_macvim")
 	set fuoptions=maxvert,maxhorz " fullscreen options (MacVim only), resized window when changed to fullscreen
@@ -16,25 +17,9 @@ elseif has("gui_gtk2")
 elseif has("x11")
 	source $HOME\vimfiles\mswin.vim
 elseif has("nvim")
-	source $HOME\vimfiles\mswin.vim
 	behave xterm
 	call GuiWindowMaximized(1)
-	" Guifont! Consolas:h11:cANSI
-	Guifont! Consolas for Powerline FixedD:h11
-	let g:airline_powerline_fonts = 1
-	let g:airline_symbols = {}
-	let g:airline_left_sep = "\u2b80"
-	let g:airline_left_alt_sep = "\u2b81"
-	let g:airline_right_sep = "\u2b82"
-	let g:airline_right_alt_sep = "\u2b83"
-	let g:airline_symbols.branch = "\u2b60"
-	let g:airline_symbols.readonly = "\u2b64"
-	let g:airline_symbols.linenr = "\u2b61"
-	let g:airline_symbols.space = " "
-	let g:airline_symbols.whitespace = "\u02fd"
-	let g:airline_symbols.modified = "*"
 elseif has("gui_win32")
-	source $HOME\vimfiles\mswin.vim
 
 	behave xterm
 
@@ -46,30 +31,6 @@ elseif has("gui_win32")
 	set anti " Antialias font
 	" au GUIEnter * simalt ~x   " maximize window on startup
 	set guifont=Consolas_for_Powerline_FixedD:h11,DejaVu_Sans_Mono_for_Powerline:h10:cANSI,Consolas:h11:cANSI,Lucida_Console:h10:cANSI,Courier_New:h10:cANSI
-
-	if hostname() == "DESKTOP-1MMBAGK"
-		let g:airline_powerline_fonts = 1
-		" standard powerline symbols:
-		" let g:airline_left_sep = ''
-		" let g:airline_left_alt_sep = ''
-		" let g:airline_right_sep = ''
-		" let g:airline_right_alt_sep = ''
-		" let g:airline_symbols.branch = ''
-		" let g:airline_symbols.readonly = ''
-		" let g:airline_symbols.linenr = ''
-		" deprecated Consolas powerline symbols :
-		let g:airline_symbols = {}
-		let g:airline_left_sep = "\u2b80"
-		let g:airline_left_alt_sep = "\u2b81"
-		let g:airline_right_sep = "\u2b82"
-		let g:airline_right_alt_sep = "\u2b83"
-		let g:airline_symbols.branch = "\u2b60"
-		let g:airline_symbols.readonly = "\u2b64"
-		let g:airline_symbols.linenr = "\u2b61"
-		let g:airline_symbols.space = " "
-		let g:airline_symbols.whitespace = "\u02fd"
-		let g:airline_symbols.modified = "*"
-	endif
 end
 
 noremap <Leader>t <Esc>:tabnew<CR>

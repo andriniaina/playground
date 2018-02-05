@@ -36,11 +36,9 @@ set shellslash
 " |                              Plug-ins                                     |
 " -----------------------------------------------------------------------------  
 
-if has('nvim')
-    set clipboard+=unnamedplus
-	set rtp+=~/.fzf
-	runtime mswin.vim
-endif
+set rtp+=~/.fzf
+runtime mswin.vim
+set clipboard+=unnamedplus
 
 call plug#begin('~/vim-plug')
 Plug 'junegunn/fzf.vim'
@@ -50,7 +48,7 @@ Plug 'vim-scripts/LargeFile'
 Plug 'vim-scripts/L9'
 Plug 'vim-scripts/vbnet.vim'
 Plug 'vim-scripts/bclear'
-Plug 'vim-scripts/vim-airline'
+Plug 'vim-airline/vim-airline'
 Plug 'vim-scripts/vim-less'
 Plug 'plasticboy/vim-markdown'
 Plug 'vim-scripts/EnhCommentify.vim'
