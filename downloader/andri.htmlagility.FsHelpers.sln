@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "andri.htmlagility.2010", "..\andri.htmlagility\andri.htmlagility.2010.csproj", "{18F00305-8E8A-4058-825A-06BD8665C6BD}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "andri.htmlagility.FsHelpers", "andri.htmlagility.FsHelpers.fsproj", "{DC31F5A8-AAF1-4971-A667-FBB61B55EB5A}"
