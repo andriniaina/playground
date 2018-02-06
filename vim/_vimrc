@@ -351,7 +351,11 @@ endif
 
 " persistent undo
 if has("persistent_undo")
-    set undodir=m:\temp\vim_undo
+	if hostname() == "Heri-3.local"
+		set undodir=~/.vim_undo
+	else
+		set undodir=m:\temp\vim_undo
+	endif
 	if !isdirectory(&undodir)
 		call mkdir(&undodir)
 	end
