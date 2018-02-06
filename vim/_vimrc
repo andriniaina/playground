@@ -27,7 +27,11 @@
 
 
 set nocompatible
-let mapleader = "²"
+if hostname() == "Heri-3.local"
+	let mapleader = "`"
+else
+	let mapleader = "²"
+endif
 set bufhidden=unload
 set shellslash
 
