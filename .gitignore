@@ -109,3 +109,4 @@ UpgradeLog*.XML
 
 /BtcClient/proxy.fs
 vim/.viminfo
+vim/vim-plug
