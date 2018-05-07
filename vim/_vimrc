@@ -345,16 +345,12 @@ set wildmenu
 " Windows *********************************************************************
 if has("gui_win32")
 	" Set Swap directory
-	set directory=d:\temp,c:\temp,.
+	set directory=~/.swap_dir
 endif
 
 " persistent undo
 if has("persistent_undo")
-	if hostname() == "Heri-3.local"
-		set undodir=~/.vim_undo
-	else
-		set undodir=m:\temp\vim_undo
-	endif
+	set undodir=~/.undo_dir
 	if !isdirectory(&undodir)
 		call mkdir(&undodir)
 	end
