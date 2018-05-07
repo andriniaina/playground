@@ -110,3 +110,6 @@ UpgradeLog*.XML
 /BtcClient/proxy.fs
 vim/.viminfo
 vim/vim-plug
+
+vim/.swap_dir
+vim/.undo_dir

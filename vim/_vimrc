@@ -346,6 +346,9 @@ set wildmenu
 if has("gui_win32")
 	" Set Swap directory
 	set directory=~/.swap_dir
+	if !isdirectory(&directory)
+		call mkdir(&directory)
+	end
 endif
 
 " persistent undo
