@@ -42,7 +42,6 @@ set shellslash
 
 set rtp+=~/.fzf
 runtime mswin.vim
-set clipboard+=unnamedplus
 
 call plug#begin('~/vim-plug')
 Plug 'junegunn/fzf.vim'

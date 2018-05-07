@@ -22,6 +22,7 @@ elseif has("gui_gtk2")
 elseif has("x11")
 	" nothing
 elseif has("nvim")
+	" set clipboard+=unnamedplus
 	if has("win32")
 		Guifont! Consolas for Powerline FixedD:h11
 	endif
