@@ -1,6 +1,8 @@
 // https://www.codingame.com/ide/puzzle/chuck-norris
 (* Auto-generated code below aims at helping you parse *)
 (* the standard input according to the problem statement. *)
+module ChuckNorris
+
 open System
 open System.Collections
 open System.Numerics
