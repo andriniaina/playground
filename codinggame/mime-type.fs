@@ -2,6 +2,7 @@
 (* the standard input according to the problem statement. *)
 open System
 
+let read f = Console.ReadLine() |> f
 let N = int(Console.In.ReadLine()) (* Number of elements which make up the association table. *)
 let Q = int(Console.In.ReadLine()) (* Number Q of file names to be analyzed. *)
 let mappingSequenceReader = seq {
