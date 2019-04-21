@@ -9,4 +9,4 @@ let x = Enigma.rotor "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "BDFHJLCPRTXVZNYEIWGAKMUSQO" "
 let chars = Enigma.decode 9 ("BDFHJLCPRTXVZNYEIWGAKMUSQO","AJDKSIRUXBLHWTMCQGZNPYFVOE","EKMFLGDQVZNTOWYHXUSPAIBRCJ") "PQSACVVTOISXFXCIAMQEM"
 let result = chars |> Array.ofSeq |> String
 printfn "%s" result
-Console.ReadLine()
+Console.ReadLine() |> ignore

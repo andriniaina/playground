@@ -24,14 +24,14 @@ let bytes =
     }
 
 let byteArray =
+    let toBitArray (b : byte) = BitArray([| b |])
     bytes
-    |> Seq.map (fun b -> new BitArray([| b |]))
-    |> Seq.map (fun b ->
-           b
-           |> Seq.cast<bool>
-           |> Seq.rev
-           |> Seq.tail)
-    |> Seq.map (fun b -> new BitArray(Array.ofSeq b))
+    |> Seq.map (toBitArray
+                >> Seq.cast<bool>
+                >> Seq.rev
+                >> Seq.tail
+                >> Array.ofSeq
+                >> BitArray)
 
 let bits =
     byteArray
@@ -51,7 +51,8 @@ let (incompleteList, last) =
 let finalList = last :: incompleteList |> List.rev
 let zeroGenerator n = String.init n (fun i -> "0")
 let blockPairs =
-    finalList |> List.map (fun (b, count) -> sprintf "%s %s" (if b then "0" else "00") (zeroGenerator count))
+    finalList |> List.map (fun (b, count) -> sprintf "%s %s" (if b then "0"
+                                                              else "00") (zeroGenerator count))
 
 printfn "%s" (String.Join(" ", blockPairs))
-Console.In.ReadLine()
+Console.In.ReadLine() |> ignore
