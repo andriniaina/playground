@@ -5,6 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="chucknorris.fs" />
+    <Compile Include="encryptiondecryption-of-enigma-machine.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 </Project>
