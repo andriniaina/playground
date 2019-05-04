@@ -34,17 +34,21 @@ class SortAlgorithms
 
     static void HeapSort<T>(T[] a) where T : IComparable
     {
-        void swapIfNecessary2(ref T v1, ref T v2)
+        bool swapIfNecessary2(ref T v1, ref T v2)
         {
             if (v2.CompareTo(v1) > 0)
             {
                 var tmp = v2; v2 = v1; v1 = tmp;
+                return true;
             }
+            return false;
         }
-        void swapIfNecessary3(ref T v1, ref T v2, ref T v3)
+        bool swapIfNecessary3(ref T v1, ref T v2, ref T v3)
         {
-            swapIfNecessary2(ref v1, ref v2);
-            swapIfNecessary2(ref v1, ref v3);
+            return
+                swapIfNecessary2(ref v1, ref v2)
+                |
+                swapIfNecessary2(ref v1, ref v3);
         }
         int getParent(int pi)
         {
@@ -70,7 +74,8 @@ class SortAlgorithms
             while (pi > 0)
             {
                 var parent = getParent(pi);
-                swapIfNecessary2(ref a[parent], ref a[pi]);
+                if(!swapIfNecessary2(ref a[parent], ref a[pi]))
+                    break;
                 stdout(join(a));
                 pi = parent;
             }
@@ -91,7 +96,8 @@ class SortAlgorithms
                 var (c1, c2) = getChildren(c);
                 if (c2 >= a.Length || a[c1].CompareTo(a[c2]) > 0)
                 {
-                    swapIfNecessary2(ref a[c], ref a[c1]);
+                    if(!swapIfNecessary2(ref a[c], ref a[c1]))
+                        break;
                     stdout(join(a));
                     c = c1;
                 }
@@ -99,7 +105,8 @@ class SortAlgorithms
                 {
                     if (c2 < rightBoundary)
                     {
-                        swapIfNecessary2(ref a[c], ref a[c2]);
+                        if(!swapIfNecessary2(ref a[c], ref a[c2]))
+                            break;
                         stdout(join(a));
                     }
                     c = c2;
