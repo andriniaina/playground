@@ -9,7 +9,10 @@
                 "test",
                 "${workspaceFolder}/codinggame_csharp.sln"
             ],
-            "group": "test"
+            "group": {
+                "kind": "test",
+                "isDefault": true
+            }
         },
         {
             "label": "build",
