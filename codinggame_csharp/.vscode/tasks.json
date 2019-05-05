@@ -2,12 +2,22 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "test",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "test",
+                "${workspaceFolder}/codinggame_csharp.sln"
+            ],
+            "group": "test"
+        },
+        {
             "label": "build",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/codinggame_csharp.csproj"
+                "${workspaceFolder}/codinggame_csharp.sln"
             ],
             "problemMatcher": "$tsc"
         },
@@ -17,7 +27,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/codinggame_csharp.csproj"
+                "${workspaceFolder}/codinggame_csharp.sln"
             ],
             "problemMatcher": "$tsc"
         },
@@ -28,7 +38,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/codinggame_csharp.csproj"
+                "${workspaceFolder}/codinggame_csharp.sln"
             ],
             "problemMatcher": "$tsc"
         }

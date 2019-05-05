@@ -4,7 +4,7 @@ namespace codinggame_csharp
 {
     class Program
     {
-        static void Mainxx(string[] args)
+        static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
         }

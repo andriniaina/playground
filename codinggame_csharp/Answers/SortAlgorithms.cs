@@ -11,9 +11,9 @@ using System.Runtime.Serialization;
 using System.Text.RegularExpressions;
 using System.Text;
 using System;
-class SortAlgorithms
+public class SortAlgorithms
 {
-    static void BubbleSort<T>(T[] a) where T : IComparable
+    public static void BubbleSort<T>(T[] a) where T : IComparable
     {
         var hasSwapped = false;
         do
@@ -32,7 +32,7 @@ class SortAlgorithms
         } while (hasSwapped);
     }
 
-    static void HeapSort<T>(T[] a) where T : IComparable
+    public static void HeapSort<T>(T[] a) where T : IComparable
     {
         bool swapIfNecessary2(ref T v1, ref T v2)
         {
@@ -74,7 +74,7 @@ class SortAlgorithms
             while (pi > 0)
             {
                 var parent = getParent(pi);
-                if(!swapIfNecessary2(ref a[parent], ref a[pi]))
+                if (!swapIfNecessary2(ref a[parent], ref a[pi]))
                     break;
                 stdout(join(a));
                 pi = parent;
@@ -96,7 +96,7 @@ class SortAlgorithms
                 var (c1, c2) = getChildren(c);
                 if (c2 >= a.Length || a[c1].CompareTo(a[c2]) > 0)
                 {
-                    if(!swapIfNecessary2(ref a[c], ref a[c1]))
+                    if (!swapIfNecessary2(ref a[c], ref a[c1]))
                         break;
                     stdout(join(a));
                     c = c1;
@@ -105,7 +105,7 @@ class SortAlgorithms
                 {
                     if (c2 < rightBoundary)
                     {
-                        if(!swapIfNecessary2(ref a[c], ref a[c2]))
+                        if (!swapIfNecessary2(ref a[c], ref a[c2]))
                             break;
                         stdout(join(a));
                     }
@@ -123,14 +123,6 @@ class SortAlgorithms
 1 3  3 3   4 1  4 2  2 2  3
      */
 
-
-    static void Main(string[] args)
-    {
-        var array = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 1, 2, 3, 4, 5, 6, 7, 8, 3, 4, 67, 8, 34, 2, 2, 4, 5 };
-        stdout(join(array));
-        SortAlgorithms.HeapSort(array);
-        stdout(join(array));
-    }
 
     [System.Diagnostics.Conditional("DEBUG")]
     private static void stdout(string v)
