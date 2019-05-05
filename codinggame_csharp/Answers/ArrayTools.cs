@@ -7,7 +7,7 @@ public class ArrayTools
     {
         return string.Join(",", array);
     }
-    /// <exception>Can return an index bigger than a.Length if no element found</exception>
+    /// <exception>Can return -1 if no element found</exception>
     public static int FindIndexLesserOrEqualThan(int[] a, int upperBound)
     {
         var left = 0;
@@ -40,7 +40,7 @@ public class ArrayTools
             }
         }
     }
-    /// <exception>Can return an index bigger than a.Length if no element found</exception>
+    /// <exception>Can return -1 if no element found</exception>
     public static int FindIndexGreaterOrEqualThan(int[] a, int lowerBound)
     {
         var left = 0;
