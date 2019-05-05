@@ -12,6 +12,21 @@ namespace Tests
             Assert.Equal("-1,2,3,4,5,6", s);
         }
         [Fact(Timeout = 100)]
+        public void FindIndexOf()
+        {
+            var s = ArrayTools.FindIndexOf(new int[] { -1, 2, 3, 4, 5, 6 }, 2);
+            Assert.Equal(1, s);
+            
+            s = ArrayTools.FindIndexOf(new int[] { -1, 2, 3, 4, 5, 6 }, 0);
+            Assert.Equal(0.5, s);
+            
+            s = ArrayTools.FindIndexOf(new int[] { -1, 2, 3, 4, 5, 6 }, 100);
+            Assert.Equal(5.5, s);
+            
+            s = ArrayTools.FindIndexOf(new int[] { -1, 2, 3, 4, 5, 6 }, -100);
+            Assert.Equal(-.5, s);
+        }
+        [Fact(Timeout = 100)]
         public void FindLowerBound_middle()
         {
             var s = ArrayTools.FindIndexGreaterOrEqualThan(new int[] { -1, 2, 3, 4, 5, 6 }, 2);

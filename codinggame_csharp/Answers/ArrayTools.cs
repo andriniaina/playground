@@ -7,6 +7,37 @@ public class ArrayTools
     {
         return string.Join(",", array);
     }
+    public static float FindIndexOf(int[] a, int v)
+    {
+        var left = 0;
+        var right = a.Length - 1;
+        var i = a.Length / 2;
+        while (true)
+        {
+            if (a[i] > v) // must go left
+            {
+                right = i;
+            }
+            else if (a[i] < v) // must go right
+            {
+                left = i;
+            }
+            else // it's right there!
+            {
+                return i;
+            }
+            i = (left + right) / 2;
+
+            if (left + 1 >= right)
+            {
+                if (a[right] < v)
+                    return right + 0.5F;
+                else if (a[left] > v)
+                    return left - 0.5F;
+                return (left + right) / 2.0F;
+            }
+        }
+    }
     /// <exception>Can return -1 if no element found</exception>
     public static int FindIndexLesserOrEqualThan(int[] a, int upperBound)
     {
