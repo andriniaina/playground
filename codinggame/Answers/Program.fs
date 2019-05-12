@@ -1,6 +1,4 @@
-﻿(* Auto-generated code below aims at helping you parse *)
-(* the standard input according to the problem statement. *)
-open System
+﻿open System
 
 type IOSideEffect<'a> = IO of 'a
 
@@ -18,3 +16,9 @@ let readConsole f = iobuilder {
     return f data
 }
 let input = readConsole int
+
+[<EntryPoint>]
+let main args =
+    printfn "Arguments passed to function : %A" args
+    // Return 0. This indicates success.
+    0
