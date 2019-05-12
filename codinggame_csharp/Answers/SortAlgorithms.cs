@@ -123,6 +123,18 @@ public class SortAlgorithms
 1 3  3 3   4 1  4 2  2 2  3
      */
 
+    public void MergeSort<T>(T[] a)
+    {
+        var size = 1;
+        while (size < a.Length)
+        {
+            for (int i = 0; i < a.Length; i += size)
+            {
+
+            }
+            size = size * 2;
+        }
+    }
 
     [System.Diagnostics.Conditional("DEBUG")]
     private static void stdout(string v)

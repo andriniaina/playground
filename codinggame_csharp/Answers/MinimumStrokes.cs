@@ -30,7 +30,6 @@ public class MinimumStrokes
             nbStrokes++;
 
         }
-        return 0;
     }
 
     private static void propagate(char c, int w, int i, List<char> p)

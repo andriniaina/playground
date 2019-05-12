@@ -7,7 +7,7 @@ public class ArrayTools
     {
         return string.Join(",", array);
     }
-    public static float FindIndexOf(int[] a, int v)
+    public static decimal FindIndexOf(int[] a, int v)
     {
         var left = 0;
         var right = a.Length - 1;
@@ -31,10 +31,10 @@ public class ArrayTools
             if (left + 1 >= right)
             {
                 if (a[right] < v)
-                    return right + 0.5F;
+                    return right + 0.5m;
                 else if (a[left] > v)
-                    return left - 0.5F;
-                return (left + right) / 2.0F;
+                    return left - 0.5m;
+                return (left + right) / 2.0m;
             }
         }
     }

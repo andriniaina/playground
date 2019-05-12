@@ -113,3 +113,8 @@ vim/vim-plug
 
 vim/.swap_dir
 vim/.undo_dir
+vim/.vim_undo
+vim/.local
+*.swp
+
+.DS_Store

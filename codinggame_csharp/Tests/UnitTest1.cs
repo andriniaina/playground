@@ -18,13 +18,13 @@ namespace Tests
             Assert.Equal(1, s);
             
             s = ArrayTools.FindIndexOf(new int[] { -1, 2, 3, 4, 5, 6 }, 0);
-            Assert.Equal(0.5, s);
+            Assert.Equal(0.5m, s);
             
             s = ArrayTools.FindIndexOf(new int[] { -1, 2, 3, 4, 5, 6 }, 100);
-            Assert.Equal(5.5, s);
+            Assert.Equal(5.5m, s);
             
             s = ArrayTools.FindIndexOf(new int[] { -1, 2, 3, 4, 5, 6 }, -100);
-            Assert.Equal(-.5, s);
+            Assert.Equal(-.5m, s);
         }
         [Fact(Timeout = 100)]
         public void FindLowerBound_middle()

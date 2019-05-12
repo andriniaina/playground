@@ -5,6 +5,7 @@
             "label": "test",
             "command": "dotnet",
             "type": "process",
+            "options": {"cwd": "${workspaceFolder}/Tests"},
             "args": [
                 "test",
                 "${workspaceFolder}/codinggame_csharp.sln"
@@ -42,6 +43,17 @@
                 "watch",
                 "run",
                 "${workspaceFolder}/codinggame_csharp.sln"
+            ],
+            "problemMatcher": "$tsc"
+        },
+        {
+            "label": "watch_test",
+            "command": "dotnet",
+            "type": "process",
+            "options": {"cwd": "${workspaceFolder}/Tests"},
+            "args": [
+                "watch",
+                "test"
             ],
             "problemMatcher": "$tsc"
         }
