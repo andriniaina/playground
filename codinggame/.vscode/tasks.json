@@ -7,6 +7,7 @@
             "label": "test",
             "command": "dotnet",
             "type": "process",
+            "options": {"cwd": "${workspaceFolder}/Tests"},
             "args": [
                 "test",
                 "${workspaceFolder}/Tests/Tests.fsproj"
