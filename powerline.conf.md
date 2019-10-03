@@ -6,5 +6,5 @@ Add-PowerLineBlock { New-PromptText " $(Get-Date -f ""T"") " -ErrorBackgroundCol
 Add-PowerLineBlock { " $(Get-ShortenedPath -MaximumLength 40)" }
 Add-PowerLineBlock { Write-VcsStatus }
 
-Set-PowerLinePrompt -Colors "Cyan" ,"#0066FF","Gray"
+Set-PowerLinePrompt -Colors "#2F5063" ,"#52DE49","#FDE640"
 ```
