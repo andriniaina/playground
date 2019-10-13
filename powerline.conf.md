@@ -4,7 +4,11 @@ font: Deja Vu Sans for Powerline
 Add-PowerLineBlock { $MyInvocation.HistoryId.ToString().PadLeft(3,"0") }
 Add-PowerLineBlock { New-PromptText " $(Get-Date -f ""T"") " -ErrorBackgroundColor "#FF0000" }
 Add-PowerLineBlock { " $(Get-ShortenedPath -MaximumLength 40)" }
+Add-PowerLineBlock { "`t" }
+Add-PowerLineBlock { if($env:VIRTUAL_ENV) { "($($env:VIRTUAL_ENV))" }  }
 Add-PowerLineBlock { Write-VcsStatus }
+Add-PowerLineBlock { "`n" }
+
 
 Set-PowerLinePrompt -Colors "#2F5063" ,"#52DE49","#FDE640"
 Set-PowerLinePrompt -Colors "#2F5063","#11A8CD","#E5E5E5"
